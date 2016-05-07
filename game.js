@@ -33,6 +33,10 @@ area = {
 	}
 }
 
+config = {
+	EMPTY_TILE : "#818181"
+}
+
 square = function(row, column, color) {
 	this.row = row * 20;
 	this.column = column * 20;
@@ -40,6 +44,7 @@ square = function(row, column, color) {
 	this.update = function() {
 		ctx = area.context;
 		ctx.save;
+		ctx.fillStyle = config.EMPTY_TILE;
 		ctx.fillRect(this.row, this.column, 18, 18);
 		ctx.restore;
 	}
