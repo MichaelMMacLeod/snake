@@ -57,7 +57,7 @@ area = {
 							console.log("Game Over");
 						}
 					}
-				} catch (err) { }
+				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
 						m[i][j].color = 2;
@@ -69,7 +69,7 @@ area = {
 							console.log("Game Over");
 						}
 					}
-				} catch (err) { }
+				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
 						m[i][j].color = 2;
@@ -81,7 +81,7 @@ area = {
 							console.log("Game Over");
 						}
 					}
-				} catch (err) { }
+				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
 						m[i][j].color = 2;
@@ -93,7 +93,7 @@ area = {
 							console.log("Game Over");
 						}
 					}
-				} catch (err) { }
+				} catch (err) { console.log("Game Over") }
 			}
 		}
 		if (candy) {
