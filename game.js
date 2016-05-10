@@ -47,7 +47,7 @@ area = {
 					candy = false;
 				}
 				try {
-					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
+					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i][j - 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT; 
@@ -60,7 +60,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
+					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i - 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT; 
@@ -73,7 +73,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
+					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i][j + 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT; 
@@ -86,7 +86,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
+					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i + 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT; 
@@ -107,6 +107,7 @@ area = {
 }
 
 config = {
+	NEXT_MOVE_TIME : 5,
 	LIFE_TIME : 30,
 	CANDY_AMOUNT : 40,
 	EMPTY_TILE : "#818181",
