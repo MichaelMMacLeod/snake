@@ -29,16 +29,16 @@ area = {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
 	update : function() {
-		if (area.keys && area.keys[config.KEY_LEFT]) {
+		if (area.keys && area.keys[config.KEY_LEFT] && this.direction != "right") {
 			this.direction = "left";
 		}
-		if (area.keys && area.keys[config.KEY_UP]) {
+		if (area.keys && area.keys[config.KEY_UP] && this.direction != "down") {
 			this.direction = "up";
 		}
-		if (area.keys && area.keys[config.KEY_RIGHT]) {
+		if (area.keys && area.keys[config.KEY_RIGHT] && this.direction != "left") {
 			this.direction = "right";
 		}
-		if (area.keys && area.keys[config.KEY_DOWN]) {
+		if (area.keys && area.keys[config.KEY_DOWN] && this.direction != "up") {
 			this.direction = "down";
 		}
 		var candy = true;
