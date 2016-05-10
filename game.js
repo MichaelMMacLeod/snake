@@ -49,48 +49,52 @@ area = {
 				try {
 					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
 						m[i][j].color = 2;
-						if (m[i][j - 1].color == 0) {
+						if (m[i][j - 1].color == 3) {
+							config.LIFE_TIME += config.CANDY_AMOUNT; 
+						}
+						if (m[i][j - 1].color == 0 || m[i][j - 1].color == 3) {
 							m[i][j - 1].color = 1;
 							m[i][j - 1].life = 0;
 							nextMove = 0;
-						} else {
-							console.log("Game Over");
 						}
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
 						m[i][j].color = 2;
-						if (m[i - 1][j].color == 0) {
+						if (m[i - 1][j].color == 3) {
+							config.LIFE_TIME += config.CANDY_AMOUNT; 
+						}
+						if (m[i - 1][j].color == 0 || m[i - 1][j].color == 3) {
 							m[i - 1][j].color = 1;
 							m[i - 1][j].life = 0;
 							nextMove = 0;
-						} else {
-							console.log("Game Over");
 						}
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
 						m[i][j].color = 2;
-						if (m[i][j + 1].color == 0) {
+						if (m[i][j + 1].color == 3) {
+							config.LIFE_TIME += config.CANDY_AMOUNT; 
+						}
+						if (m[i][j + 1].color == 0 || m[i][j + 1].color == 3) {
 							m[i][j + 1].color = 1;
 							m[i][j + 1].life = 0;
 							nextMove = 0;
-						} else {
-							console.log("Game Over");
 						}
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
 						m[i][j].color = 2;
-						if (m[i + 1][j].color == 0) {
+						if (m[i + 1][j].color == 3) {
+							config.LIFE_TIME += config.CANDY_AMOUNT; 
+						}
+						if (m[i + 1][j].color == 0 || m[i + 1][j].color == 3) {
 							m[i + 1][j].color = 1;
 							m[i + 1][j].life = 0;
 							nextMove = 0;
-						} else {
-							console.log("Game Over");
 						}
 					}
 				} catch (err) { console.log("Game Over") }
@@ -103,6 +107,8 @@ area = {
 }
 
 config = {
+	LIFE_TIME : 30,
+	CANDY_AMOUNT : 40,
 	EMPTY_TILE : "#818181",
 	SNAKE_TILE : "#1500ff",
 	CANDY_TILE : "#ff0000",
@@ -130,7 +136,7 @@ square = function(column, row, color) {
 				break;
 			case 2:
 				this.life++;
-				if (this.life >= 30) {
+				if (this.life >= config.LIFE_TIME) {
 					ctx.fillStyle = config.EMPTY_TILE;
 					this.color = 0;
 				} else {
