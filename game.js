@@ -45,33 +45,49 @@ area = {
 				try {
 					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
 						m[i][j].color = 2;
-						m[i][j - 1].color = 1;
-						m[i][j - 1].life = 0;
-						nextMove = 0;
+						if (m[i][j - 1].color == 0) {
+							m[i][j - 1].color = 1;
+							m[i][j - 1].life = 0;
+							nextMove = 0;
+						} else {
+							console.log("Game Over");
+						}
 					}
 				} catch (err) { }
 				try {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
 						m[i][j].color = 2;
-						m[i - 1][j].color = 1;
-						m[i - 1][j].life = 0;
-						nextMove = 0;
+						if (m[i - 1][j].color == 0) {
+							m[i - 1][j].color = 1;
+							m[i - 1][j].life = 0;
+							nextMove = 0;
+						} else {
+							console.log("Game Over");
+						}
 					}
 				} catch (err) { }
 				try {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
 						m[i][j].color = 2;
-						m[i][j + 1].color = 1;
-						m[i][j + 1].life = 0;
-						nextMove = 0;
+						if (m[i][j + 1].color == 0) {
+							m[i][j + 1].color = 1;
+							m[i][j + 1].life = 0;
+							nextMove = 0;
+						} else {
+							console.log("Game Over");
+						}
 					}
 				} catch (err) { }
 				try {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
 						m[i][j].color = 2;
-						m[i + 1][j].color = 1;
-						m[i + 1][j].life = 0;
-						nextMove = 0;
+						if (m[i + 1][j].color == 0) {
+							m[i + 1][j].color = 1;
+							m[i + 1][j].life = 0;
+							nextMove = 0;
+						} else {
+							console.log("Game Over");
+						}
 					}
 				} catch (err) { }
 			}
@@ -109,6 +125,7 @@ square = function(column, row, color) {
 				this.life++;
 				if (this.life >= 30) {
 					ctx.fillStyle = config.EMPTY_TILE;
+					this.color = 0;
 				} else {
 					ctx.fillStyle = config.SNAKE_TILE;
 				}
