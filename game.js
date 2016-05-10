@@ -46,6 +46,7 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
 						m[i][j].color = 2;
 						m[i][j - 1].color = 1;
+						m[i][j - 1].life = 0;
 						nextMove = 0;
 					}
 				} catch (err) { }
@@ -53,6 +54,7 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
 						m[i][j].color = 2;
 						m[i - 1][j].color = 1;
+						m[i - 1][j].life = 0;
 						nextMove = 0;
 					}
 				} catch (err) { }
@@ -60,6 +62,7 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
 						m[i][j].color = 2;
 						m[i][j + 1].color = 1;
+						m[i][j + 1].life = 0;
 						nextMove = 0;
 					}
 				} catch (err) { }
@@ -67,6 +70,7 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
 						m[i][j].color = 2;
 						m[i + 1][j].color = 1;
+						m[i + 1][j].life = 0;
 						nextMove = 0;
 					}
 				} catch (err) { }
@@ -90,6 +94,7 @@ square = function(column, row, color) {
 	this.row = row * 20;
 	this.column = column * 20;
 	this.color = color;
+	this.life = 0;
 	this.update = function() {
 		ctx = area.context;
 		ctx.save;
@@ -101,7 +106,12 @@ square = function(column, row, color) {
 				ctx.fillStyle = config.SNOUT_TILE;
 				break;
 			case 2:
-				ctx.fillStyle = config.SNAKE_TILE;
+				this.life++;
+				if (this.life >= 30) {
+					ctx.fillStyle = config.EMPTY_TILE;
+				} else {
+					ctx.fillStyle = config.SNAKE_TILE;
+				}
 				break;
 			case 3:
 				ctx.fillStyle = config.CANDY_TILE;
