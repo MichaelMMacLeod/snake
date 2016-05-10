@@ -2,6 +2,7 @@ area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
 		nextMove = 0;
+		score = 0;
 		m = [];
 		for (var i = 0; i < 30; i++) {
 			m[i] = [];
@@ -50,7 +51,8 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i][j - 1].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT; 
+							config.LIFE_TIME += config.CANDY_AMOUNT;
+							score += config.SCORE_CANDY; 
 						}
 						if (m[i][j - 1].color == 0 || m[i][j - 1].color == 3) {
 							m[i][j - 1].color = 1;
@@ -63,7 +65,8 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i - 1][j].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT; 
+							config.LIFE_TIME += config.CANDY_AMOUNT;
+							score += config.SCORE_CANDY; 
 						}
 						if (m[i - 1][j].color == 0 || m[i - 1][j].color == 3) {
 							m[i - 1][j].color = 1;
@@ -76,7 +79,8 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i][j + 1].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT; 
+							config.LIFE_TIME += config.CANDY_AMOUNT;
+							score += config.SCORE_CANDY; 
 						}
 						if (m[i][j + 1].color == 0 || m[i][j + 1].color == 3) {
 							m[i][j + 1].color = 1;
@@ -89,7 +93,8 @@ area = {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= config.NEXT_MOVE_TIME) {
 						m[i][j].color = 2;
 						if (m[i + 1][j].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT; 
+							config.LIFE_TIME += config.CANDY_AMOUNT;
+							score += config.SCORE_CANDY; 
 						}
 						if (m[i + 1][j].color == 0 || m[i + 1][j].color == 3) {
 							m[i + 1][j].color = 1;
@@ -103,6 +108,7 @@ area = {
 		if (candy) {
 			m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
 		}
+		document.title = score + " Points";
 	}
 }
 
@@ -110,6 +116,7 @@ config = {
 	NEXT_MOVE_TIME : 5,
 	LIFE_TIME : 30,
 	CANDY_AMOUNT : 40,
+	SCORE_CANDY : 10,
 	EMPTY_TILE : "#818181",
 	SNAKE_TILE : "#1500ff",
 	CANDY_TILE : "#ff0000",
