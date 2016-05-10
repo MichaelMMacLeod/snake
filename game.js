@@ -1,6 +1,7 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		nextMove = 0;
 		m = [];
 		for (var i = 0; i < 30; i++) {
 			m[i] = [];
@@ -8,6 +9,7 @@ area = {
 				m[i][j] = new square(i, j, 0);
 			}
 		}
+		this.direction = 0;
 		m[15][15].color = 1;
 		this.canvas.width = 598;
 		this.canvas.height = 598;
@@ -26,7 +28,50 @@ area = {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
 	update : function() {
-		
+		if (area.keys && area.keys[config.KEY_LEFT]) {
+			this.direction = "left";
+		}
+		if (area.keys && area.keys[config.KEY_UP]) {
+			this.direction = "up";
+		}
+		if (area.keys && area.keys[config.KEY_RIGHT]) {
+			this.direction = "right";
+		}
+		if (area.keys && area.keys[config.KEY_DOWN]) {
+			this.direction = "down";
+		}
+		for (var i = 0; i < m.length; i++) {
+			for (var j = 0; j < m.length; j++) {
+				try {
+					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
+						m[i][j].color = 2;
+						m[i][j - 1].color = 1;
+						nextMove = 0;
+					}
+				} catch (err) { }
+				try {
+					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= 10) {
+						m[i][j].color = 2;
+						m[i - 1][j].color = 1;
+						nextMove = 0;
+					}
+				} catch (err) { }
+				try {
+					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= 10) {
+						m[i][j].color = 2;
+						m[i][j + 1].color = 1;
+						nextMove = 0;
+					}
+				} catch (err) { }
+				try {
+					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= 10) {
+						m[i][j].color = 2;
+						m[i + 1][j].color = 1;
+						nextMove = 0;
+					}
+				} catch (err) { }
+			}
+		}
 	}
 }
 
@@ -41,10 +86,10 @@ config = {
 	KEY_DOWN : 83
 }
 
-square = function(row, column, color) {
-	this.color = color;
+square = function(column, row, color) {
 	this.row = row * 20;
 	this.column = column * 20;
+	this.color = color;
 	this.update = function() {
 		ctx = area.context;
 		ctx.save;
@@ -70,6 +115,7 @@ square = function(row, column, color) {
 }
 
 update = function() {
+	nextMove++;
 	area.clear();
 	area.update();
 	for (var i = 0; i < m.length; i++) {
