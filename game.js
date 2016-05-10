@@ -40,8 +40,12 @@ area = {
 		if (area.keys && area.keys[config.KEY_DOWN]) {
 			this.direction = "down";
 		}
+		var candy = true;
 		for (var i = 0; i < m.length; i++) {
 			for (var j = 0; j < m.length; j++) {
+				if (m[i][j].color == 3) {
+					candy = false;
+				}
 				try {
 					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= 10) {
 						m[i][j].color = 2;
@@ -91,6 +95,9 @@ area = {
 					}
 				} catch (err) { }
 			}
+		}
+		if (candy) {
+			m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
 		}
 	}
 }
