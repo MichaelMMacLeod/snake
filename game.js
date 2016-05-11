@@ -31,16 +31,28 @@ area = {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
 	update : function() {
-		if (area.keys && area.keys[config.KEY_LEFT] && this.direction != "right") {
+		if (area.keys && this.direction != "right" && area.keys[config.KEY_LEFT]) {
 			this.direction = "left";
 		}
-		if (area.keys && area.keys[config.KEY_UP] && this.direction != "down") {
+		if (area.keys && this.direction != "right" && area.keys[config.KEY_LEFT_2]) {
+			this.direction = "left";
+		}
+		if (area.keys && this.direction != "down" && area.keys[config.KEY_UP]) {
 			this.direction = "up";
 		}
-		if (area.keys && area.keys[config.KEY_RIGHT] && this.direction != "left") {
+		if (area.keys && this.direction != "down" && area.keys[config.KEY_UP_2]) {
+			this.direction = "up";
+		}
+		if (area.keys && this.direction != "left" && area.keys[config.KEY_RIGHT]) {
 			this.direction = "right";
 		}
-		if (area.keys && area.keys[config.KEY_DOWN] && this.direction != "up") {
+		if (area.keys && this.direction != "left" && area.keys[config.KEY_RIGHT_2]) {
+			this.direction = "right";
+		}
+		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN]) {
+			this.direction = "down";
+		}
+		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN_2]) {
 			this.direction = "down";
 		}
 		var candy = true;
@@ -157,7 +169,11 @@ config = {
 	KEY_LEFT : 65,
 	KEY_UP : 87,
 	KEY_RIGHT : 68,
-	KEY_DOWN : 83
+	KEY_DOWN : 83,
+	KEY_LEFT_2 : 37,
+	KEY_UP_2 : 38,
+	KEY_RIGHT_2 : 39,
+	KEY_DOWN_2 : 40
 }
 
 square = function(column, row, color) {
