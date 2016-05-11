@@ -1,3 +1,19 @@
 canvas {
 	border: 1px dashed black;
+	float: left;
+}
+
+#menu {
+	float: left;
+	width: 100px;
+	height: 600px;
+	margin-left: 5px;
+	background-color: black;
+}
+
+.button {
+	width: 100px;
+	height: 99px;
+	margin-bottom: 0px;
+	background-color: white;
 }
