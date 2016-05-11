@@ -176,7 +176,10 @@ config = {
 	CANDY_AMOUNT : 30,
 	SCORE_CANDY : 10,
 	EMPTY_TILE : "#818181",
-	SNAKE_TILE : "#1500ff",
+	SNAKE_TILE_1 : "#1500ff",
+	SNAKE_TILE_2 : "#3e2dff",
+	SNAKE_TILE_3 : "#5e4fff",
+	SNAKE_TILE_4 : "#9990ff",
 	CANDY_TILE : "#ff0000",
 	SNOUT_TILE : "#00ecff",
 	KEY_LEFT : 65,
@@ -210,7 +213,15 @@ square = function(column, row, color) {
 					ctx.fillStyle = config.EMPTY_TILE;
 					this.color = 0;
 				} else {
-					ctx.fillStyle = config.SNAKE_TILE;
+					if (this.life / config.LIFE_TIME >= 0.75) {
+						ctx.fillStyle = config.SNAKE_TILE_1;
+					} else if (this.life / config.LIFE_TIME >= 0.50) {
+						ctx.fillStyle = config.SNAKE_TILE_2;
+					} else if (this.life / config.LIFE_TIME >= 0.25) {
+						ctx.fillStyle = config.SNAKE_TILE_3;
+					} else if (this.life / config.LIFE_TIME >= 0.00) {
+						ctx.fillStyle = config.SNAKE_TILE_4;
+					}
 				}
 				break;
 			case 3:
