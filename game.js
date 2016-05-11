@@ -1,6 +1,8 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		buttonInput.mode = 0;
+		buttonInput.difficulty();
 		nextMove = 0;
 		score = 0;
 		m = [];
@@ -112,10 +114,41 @@ area = {
 	}
 }
 
+buttonInput = {
+	difficulty : function() {
+		this.mode++;
+		if (this.mode > 2) {
+			this.mode = 0;
+		}
+		switch (this.mode) {
+			case 0:
+				config.NEXT_MOVE_TIME = 7;
+				config.SCORE_CANDY = 12;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Well-Fed";
+				document.getElementById("difficulty").style.backgroundColor = "#ffc3c3";
+			break;
+			case 1:
+				config.NEXT_MOVE_TIME = 5;
+				config.SCORE_CANDY = 30;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Hungry";
+				document.getElementById("difficulty").style.backgroundColor = "#ff7474";
+			break;
+			case 2:
+				config.NEXT_MOVE_TIME = 3;
+				config.SCORE_CANDY = 75;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Starving";
+				document.getElementById("difficulty").style.backgroundColor = "#ff1818";
+			break;
+			default:
+			break;
+		}
+	}
+}
+
 config = {
 	NEXT_MOVE_TIME : 5,
 	LIFE_TIME : 30,
-	CANDY_AMOUNT : 40,
+	CANDY_AMOUNT : 30,
 	SCORE_CANDY : 10,
 	EMPTY_TILE : "#818181",
 	SNAKE_TILE : "#1500ff",
