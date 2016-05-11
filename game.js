@@ -1,6 +1,8 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		buttonInput.grid = true;
+		buttonInput.gridToggle();
 		buttonInput.mode = 0;
 		buttonInput.difficulty();
 		nextMove = 0;
@@ -127,6 +129,17 @@ area = {
 }
 
 buttonInput = {
+	gridToggle : function() {
+		if (this.grid == true) {
+			area.canvas.style.backgroundColor = config.EMPTY_TILE;
+			document.getElementById("grid").innerHTML = "[Grid] Off";
+			this.grid = false;
+		} else {
+			this.grid = true;
+			area.canvas.style.backgroundColor = "white";
+			document.getElementById("grid").innerHTML = "[Grid] On";
+		}
+	},
 	difficulty : function() {
 		this.mode++;
 		if (this.mode > 2) {
