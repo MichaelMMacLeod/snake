@@ -1,6 +1,8 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		buttonInput.hardcore = true;
+		buttonInput.hardcoreToggle();
 		buttonInput.sColor = "blue";
 		buttonInput.snakeColor();
 		buttonInput.grid = true;
@@ -131,34 +133,59 @@ area = {
 }
 
 buttonInput = {
-	snakeColor : function() {
-		switch (this.sColor) {
-			case "blue":
-				this.sColor = "green";
-				config.SNAKE_TILE_4 = "#00fb50";
-				config.SNAKE_TILE_3 = "#00db30";
-				config.SNAKE_TILE_2 = "#00a925";
-				config.SNAKE_TILE_1 = "#00761a";
-				document.getElementById("snakeColor").style.backgroundColor = "#00fb50";
+	hardcoreToggle : function() {
+		switch (this.hardcore) {
+			case true:
+				this.hardcore = false;
+				buttonInput.snakeColor();
+				config.EMPTY_TILE = "#818181";
+				document.getElementById("chuckNorrisMode").style.backgroundColor = "white";
+				area.canvas.style.backgroundColor = "white";
 			break;
-			case "green":
-				this.sColor = "purple";
-				config.SNAKE_TILE_4 = "#7c00ff";
-				config.SNAKE_TILE_3 = "#5700b2";
-				config.SNAKE_TILE_2 = "#400083";
-				config.SNAKE_TILE_1 = "#2a0056";
-				document.getElementById("snakeColor").style.backgroundColor = "#7c00ff";
-			break;
-			case "purple":
-				this.sColor = "blue";
-				config.SNAKE_TILE_1 = "#1500ff";
-				config.SNAKE_TILE_2 = "#3e2dff";
-				config.SNAKE_TILE_3 = "#5e4fff";
-				config.SNAKE_TILE_4 = "#9990ff";
-				document.getElementById("snakeColor").style.backgroundColor = "#9990ff";
+			case false:
+				this.hardcore = true;
+				config.SNAKE_TILE_4 = "#000000";
+				config.SNAKE_TILE_3 = "#000000";
+				config.SNAKE_TILE_2 = "#000000";
+				config.SNAKE_TILE_1 = "#ffffff";
+				config.EMPTY_TILE = "#000000";
+				document.getElementById("chuckNorrisMode").style.backgroundColor = "#ff0000";
+				area.canvas.style.backgroundColor = "black";
 			break;
 			default:
 			break;
+		}
+	},
+	snakeColor : function() {
+		if (this.hardcore == false) {
+			switch (this.sColor) {
+				case "blue":
+					this.sColor = "green";
+					config.SNAKE_TILE_4 = "#00fb50";
+					config.SNAKE_TILE_3 = "#00db30";
+					config.SNAKE_TILE_2 = "#00a925";
+					config.SNAKE_TILE_1 = "#00761a";
+					document.getElementById("snakeColor").style.backgroundColor = "#00fb50";
+				break;
+				case "green":
+					this.sColor = "purple";
+					config.SNAKE_TILE_4 = "#7c00ff";
+					config.SNAKE_TILE_3 = "#5700b2";
+					config.SNAKE_TILE_2 = "#400083";
+					config.SNAKE_TILE_1 = "#2a0056";
+					document.getElementById("snakeColor").style.backgroundColor = "#7c00ff";
+				break;
+				case "purple":
+					this.sColor = "blue";
+					config.SNAKE_TILE_1 = "#1500ff";
+					config.SNAKE_TILE_2 = "#3e2dff";
+					config.SNAKE_TILE_3 = "#5e4fff";
+					config.SNAKE_TILE_4 = "#9990ff";
+					document.getElementById("snakeColor").style.backgroundColor = "#9990ff";
+				break;
+				default:
+				break;
+			}
 		}
 	},
 	gridToggle : function() {
