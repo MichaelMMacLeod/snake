@@ -140,7 +140,7 @@ buttonInput = {
 				buttonInput.snakeColor();
 				config.EMPTY_TILE = "#818181";
 				document.getElementById("chuckNorrisMode").style.backgroundColor = "white";
-				area.canvas.style.backgroundColor = "white";
+				area.canvas.style.backgroundColor = "#818181";
 			break;
 			case false:
 				this.hardcore = true;
