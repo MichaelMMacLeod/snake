@@ -139,6 +139,7 @@ buttonInput = {
 				config.SNAKE_TILE_3 = "#00db30";
 				config.SNAKE_TILE_2 = "#00a925";
 				config.SNAKE_TILE_1 = "#00761a";
+				document.getElementById("snakeColor").style.backgroundColor = "#00fb50";
 			break;
 			case "green":
 				this.sColor = "purple";
@@ -146,6 +147,7 @@ buttonInput = {
 				config.SNAKE_TILE_3 = "#5700b2";
 				config.SNAKE_TILE_2 = "#400083";
 				config.SNAKE_TILE_1 = "#2a0056";
+				document.getElementById("snakeColor").style.backgroundColor = "#7c00ff";
 			break;
 			case "purple":
 				this.sColor = "blue";
@@ -153,6 +155,7 @@ buttonInput = {
 				config.SNAKE_TILE_2 = "#3e2dff";
 				config.SNAKE_TILE_3 = "#5e4fff";
 				config.SNAKE_TILE_4 = "#9990ff";
+				document.getElementById("snakeColor").style.backgroundColor = "#9990ff";
 			break;
 			default:
 			break;
