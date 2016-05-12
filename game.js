@@ -1,6 +1,8 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		buttonInput.sColor = "blue";
+		buttonInput.snakeColor();
 		buttonInput.grid = true;
 		buttonInput.gridToggle();
 		buttonInput.mode = 0;
@@ -129,6 +131,33 @@ area = {
 }
 
 buttonInput = {
+	snakeColor : function() {
+		switch (this.sColor) {
+			case "blue":
+				this.sColor = "green";
+				config.SNAKE_TILE_4 = "#00fb50";
+				config.SNAKE_TILE_3 = "#00db30";
+				config.SNAKE_TILE_2 = "#00a925";
+				config.SNAKE_TILE_1 = "#00761a";
+			break;
+			case "green":
+				this.sColor = "purple";
+				config.SNAKE_TILE_4 = "#7c00ff";
+				config.SNAKE_TILE_3 = "#5700b2";
+				config.SNAKE_TILE_2 = "#400083";
+				config.SNAKE_TILE_1 = "#2a0056";
+			break;
+			case "purple":
+				this.sColor = "blue";
+				config.SNAKE_TILE_1 = "#1500ff";
+				config.SNAKE_TILE_2 = "#3e2dff";
+				config.SNAKE_TILE_3 = "#5e4fff";
+				config.SNAKE_TILE_4 = "#9990ff";
+			break;
+			default:
+			break;
+		}
+	},
 	gridToggle : function() {
 		if (this.grid == true) {
 			area.canvas.style.backgroundColor = config.EMPTY_TILE;
@@ -181,7 +210,7 @@ config = {
 	SNAKE_TILE_3 : "#5e4fff",
 	SNAKE_TILE_4 : "#9990ff",
 	CANDY_TILE : "#ff0000",
-	SNOUT_TILE : "#00ecff",
+	SNOUT_TILE : "white",
 	KEY_LEFT : 65,
 	KEY_UP : 87,
 	KEY_RIGHT : 68,
