@@ -273,7 +273,7 @@ config = {
 	LIFE_TIME : 30,
 	CANDY_AMOUNT : 30,
 	SCORE_CANDY : 10,
-	EMPTY_TILE : "#818181",
+	EMPTY_TILE : "gray",
 	SNAKE_TILE_1 : "#1500ff",
 	SNAKE_TILE_2 : "#3e2dff",
 	SNAKE_TILE_3 : "#5e4fff",
