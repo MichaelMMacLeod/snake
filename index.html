@@ -4,15 +4,12 @@
 	<title>0 Points</title>
 	<link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
-<body onload="area.start()">
+<body onload="area.start();">
 	<script src="game.js"></script>
 	<div id="menu">
-		<button class="button" id="difficulty" onclick="buttonInput.difficulty()">Difficulty</button>
-		<button class="button" id="grid" onclick="buttonInput.gridToggle()"></button>
-		<button class="button" id="snakeColor" onclick="buttonInput.snakeColor()">[Snake Color]</button>
-		<button class="button" id="chuckNorrisMode" onclick="buttonInput.hardcoreToggle()">[Hardcore]</button>
-		<button class="button"></button>
-		<button class="button"></button>
+		<button class="button" id="difficulty" onclick="snakey.speed();">Difficulty</button>
+		<button class="button" id="snakeColor" onclick="snakey.color();">[Snake Color]</button>
+		<button class="button" id="chuckNorrisMode" onclick="snakey.hardcore();">[Hardcore]</button>
 	</div>
 </body>
 </html>

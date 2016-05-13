@@ -1,14 +1,23 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
-		buttonInput.hardcore = true;
-		buttonInput.hardcoreToggle();
-		buttonInput.sColor = "blue";
-		buttonInput.snakeColor();
-		buttonInput.grid = true;
-		buttonInput.gridToggle();
-		buttonInput.mode = 0;
-		buttonInput.difficulty();
+		food = new candy();
+		snakey = new snake(
+			false,
+			config.NEXT_MOVE_TIME, 
+			config.SNOUT_TILE,
+			config.BLUE_1,
+			config.BLUE_2,
+			config.BLUE_3,
+			config.BLUE_4);
+		holder = new snake(
+			false,
+			config.NEXT_MOVE_TIME, 
+			config.SNOUT_TILE,
+			config.BLUE_1,
+			config.BLUE_2,
+			config.BLUE_3,
+			config.BLUE_4);
 		nextMove = 0;
 		score = 0;
 		m = [];
@@ -61,14 +70,13 @@ area = {
 		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN_2]) {
 			this.direction = "down";
 		}
-		var candy = true;
 		for (var i = 0; i < m.length; i++) {
 			for (var j = 0; j < m.length; j++) {
 				if (m[i][j].color == 3) {
 					candy = false;
 				}
 				try {
-					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= config.NEXT_MOVE_TIME) {
+					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
 						if (m[i][j - 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
@@ -82,7 +90,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= config.NEXT_MOVE_TIME) {
+					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
 						if (m[i - 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
@@ -96,7 +104,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= config.NEXT_MOVE_TIME) {
+					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
 						if (m[i][j + 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
@@ -110,7 +118,7 @@ area = {
 					}
 				} catch (err) { console.log("Game Over") }
 				try {
-					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= config.NEXT_MOVE_TIME) {
+					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
 						if (m[i + 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
@@ -125,112 +133,143 @@ area = {
 				} catch (err) { console.log("Game Over") }
 			}
 		}
-		if (candy) {
-			m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
-		}
+		food.update();
 		document.title = score + " Points";
 	}
 }
 
-buttonInput = {
-	hardcoreToggle : function() {
-		switch (this.hardcore) {
+candy = function() {
+	this.update = function() {
+		var candy = true;
+		for (var i = 0; i < m.length; i++) {
+			for (var j = 0; j < m.length; j++) {
+				if (m[i][j].color == 3) {
+					candy = false;
+				}
+			}
+		}
+		if (candy) {
+			m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
+		}
+	}
+}
+
+snake = function(invisible, velocity, snout, body_1, body_2, body_3, body_4) {
+	this.invisible = invisible;
+	this.velocity = velocity;
+	this.snout = snout;
+	this.body_1 = body_1;
+	this.body_2 = body_2;
+	this.body_3 = body_3;
+	this.body_4 = body_4;
+	this.hardcore = function() {
+		switch (this.invisible) {
 			case true:
-				this.hardcore = false;
-				buttonInput.snakeColor();
-				config.EMPTY_TILE = "#818181";
-				document.getElementById("chuckNorrisMode").style.backgroundColor = "white";
-				area.canvas.style.backgroundColor = "#818181";
+				this.invisible = holder.invisible;
+				this.velocity = holder.velocity;
+				this.snout = holder.snout;
+				this.body_1 = holder.body_1;
+				this.body_2 = holder.body_2;
+				this.body_3 = holder.body_3;
+				this.body_4 = holder.body_4;
+				document.getElementById("snakeColor").style.background = holder.body_1;
 			break;
 			case false:
-				this.hardcore = true;
-				config.SNAKE_TILE_4 = "#000000";
-				config.SNAKE_TILE_3 = "#000000";
-				config.SNAKE_TILE_2 = "#000000";
-				config.SNAKE_TILE_1 = "#ffffff";
-				config.EMPTY_TILE = "#000000";
-				document.getElementById("chuckNorrisMode").style.backgroundColor = "#ff0000";
-				area.canvas.style.backgroundColor = "black";
+				holder = new snake(
+					this.invisible,
+					this.velocity,
+					this.snout,
+					this.body_1,
+					this.body_2,
+					this.body_3,
+					this.body_4);
+				this.invisible = true;
+				this.body_1 = config.BLACK;
+				this.body_2 = config.EMPTY_TILE;
+				this.body_3 = config.EMPTY_TILE;
+				this.body_4 = config.EMPTY_TILE;
+				document.getElementById("snakeColor").style.background = config.BLACK;
 			break;
 			default:
 			break;
 		}
-	},
-	snakeColor : function() {
-		if (this.hardcore == false) {
-			switch (this.sColor) {
-				case "blue":
-					this.sColor = "green";
-					config.SNAKE_TILE_4 = "#00fb50";
-					config.SNAKE_TILE_3 = "#00db30";
-					config.SNAKE_TILE_2 = "#00a925";
-					config.SNAKE_TILE_1 = "#00761a";
-					document.getElementById("snakeColor").style.backgroundColor = "#00fb50";
+	}
+	this.speed = function() {
+		switch (this.velocity) {
+			case config.NEXT_MOVE_TIME:
+				this.velocity = config.NEXT_MOVE_TIME_HARD;
+				candy.amount = 75;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Starving";
+				document.getElementById("difficulty").style.backgroundColor = config.HARD_COLOR;
+			break;
+			case config.NEXT_MOVE_TIME_HARD:
+				this.velocity = config.NEXT_MOVE_TIME_EASY;
+				candy.amount = 12;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Well-Fed";
+				document.getElementById("difficulty").style.backgroundColor = config.EASY_COLOR;
+			break;
+			case config.NEXT_MOVE_TIME_EASY:
+				this.velocity = config.NEXT_MOVE_TIME;
+				candy.amount = 25;
+				document.getElementById("difficulty").innerHTML = "[Difficulty] Hungry";
+				document.getElementById("difficulty").style.backgroundColor = config.MEDIUM_COLOR;
+			break;
+			default:
+			break;
+		}
+	}
+	this.color = function() {
+		if (!this.invisible) {
+			switch (this.body_1) {
+				case config.BLUE_1:
+					this.body_1 = config.GREEN_1;
+					this.body_2 = config.GREEN_2;
+					this.body_3 = config.GREEN_3;
+					this.body_4 = config.GREEN_4;
+					document.getElementById("snakeColor").style.backgroundColor = config.GREEN_1;
 				break;
-				case "green":
-					this.sColor = "purple";
-					config.SNAKE_TILE_4 = "#7c00ff";
-					config.SNAKE_TILE_3 = "#5700b2";
-					config.SNAKE_TILE_2 = "#400083";
-					config.SNAKE_TILE_1 = "#2a0056";
-					document.getElementById("snakeColor").style.backgroundColor = "#7c00ff";
+				case config.GREEN_1:
+					this.body_1 = config.PURPLE_1;
+					this.body_2 = config.PURPLE_2;
+					this.body_3 = config.PURPLE_3;
+					this.body_4 = config.PURPLE_4;
+					document.getElementById("snakeColor").style.backgroundColor = config.PURPLE_1;
 				break;
-				case "purple":
-					this.sColor = "blue";
-					config.SNAKE_TILE_1 = "#1500ff";
-					config.SNAKE_TILE_2 = "#3e2dff";
-					config.SNAKE_TILE_3 = "#5e4fff";
-					config.SNAKE_TILE_4 = "#9990ff";
-					document.getElementById("snakeColor").style.backgroundColor = "#9990ff";
+				case config.PURPLE_1:				
+					this.body_1 = config.BLUE_1;
+					this.body_2 = config.BLUE_2;
+					this.body_3 = config.BLUE_3;
+					this.body_4 = config.BLUE_4;
+					document.getElementById("snakeColor").style.backgroundColor = config.BLUE_1;
 				break;
 				default:
 				break;
 			}
 		}
-	},
-	gridToggle : function() {
-		if (this.grid == true) {
-			area.canvas.style.backgroundColor = config.EMPTY_TILE;
-			document.getElementById("grid").innerHTML = "[Grid] Off";
-			this.grid = false;
-		} else {
-			this.grid = true;
-			area.canvas.style.backgroundColor = "white";
-			document.getElementById("grid").innerHTML = "[Grid] On";
-		}
-	},
-	difficulty : function() {
-		this.mode++;
-		if (this.mode > 2) {
-			this.mode = 0;
-		}
-		switch (this.mode) {
-			case 0:
-				config.NEXT_MOVE_TIME = 7;
-				config.SCORE_CANDY = 12;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Well-Fed";
-				document.getElementById("difficulty").style.backgroundColor = "#ffc3c3";
-			break;
-			case 1:
-				config.NEXT_MOVE_TIME = 5;
-				config.SCORE_CANDY = 30;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Hungry";
-				document.getElementById("difficulty").style.backgroundColor = "#ff7474";
-			break;
-			case 2:
-				config.NEXT_MOVE_TIME = 3;
-				config.SCORE_CANDY = 75;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Starving";
-				document.getElementById("difficulty").style.backgroundColor = "#ff1818";
-			break;
-			default:
-			break;
-		}
 	}
 }
 
 config = {
+	EASY_COLOR : "green",
+	MEDIUM_COLOR : "white",
+	HARD_COLOR : "red",
+	WHITE : "white",
+	BLACK : "black",
+	BLUE_1 : "#9990ff",
+	BLUE_2 : "#5e4fff",
+	BLUE_3 : "#3e2dff",
+	BLUE_4 : "#1500ff",
+	GREEN_1 : "#00fb50",
+	GREEN_2 : "#00db30",
+	GREEN_3 : "#00a925",
+	GREEN_4 : "#00761a",
+	PURPLE_1 : "#7c00ff",
+	PURPLE_2 : "#5700b2",
+	PURPLE_3 : "#420087",
+	PURPLE_4 : "#2a0056",
 	NEXT_MOVE_TIME : 5,
+	NEXT_MOVE_TIME_EASY : 7,
+	NEXT_MOVE_TIME_HARD : 3,
 	LIFE_TIME : 30,
 	CANDY_AMOUNT : 30,
 	SCORE_CANDY : 10,
@@ -264,7 +303,7 @@ square = function(column, row, color) {
 				ctx.fillStyle = config.EMPTY_TILE;
 				break;
 			case 1:
-				ctx.fillStyle = config.SNOUT_TILE;
+				ctx.fillStyle = snakey.snout;
 				break;
 			case 2:
 				this.life++;
@@ -273,13 +312,13 @@ square = function(column, row, color) {
 					this.color = 0;
 				} else {
 					if (this.life / config.LIFE_TIME >= 0.75) {
-						ctx.fillStyle = config.SNAKE_TILE_1;
+						ctx.fillStyle = snakey.body_1;
 					} else if (this.life / config.LIFE_TIME >= 0.50) {
-						ctx.fillStyle = config.SNAKE_TILE_2;
+						ctx.fillStyle = snakey.body_2;
 					} else if (this.life / config.LIFE_TIME >= 0.25) {
-						ctx.fillStyle = config.SNAKE_TILE_3;
+						ctx.fillStyle = snakey.body_3;
 					} else if (this.life / config.LIFE_TIME >= 0.00) {
-						ctx.fillStyle = config.SNAKE_TILE_4;
+						ctx.fillStyle = snakey.body_4;
 					}
 				}
 				break;
