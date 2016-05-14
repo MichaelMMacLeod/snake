@@ -88,7 +88,7 @@ area = {
 							nextMove = 0;
 						}
 					}
-				} catch (err) { console.log("Game Over") }
+				} catch (err) {}
 				try {
 					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
@@ -102,7 +102,7 @@ area = {
 							nextMove = 0;
 						}
 					}
-				} catch (err) { console.log("Game Over") }
+				} catch (err) {}
 				try {
 					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
@@ -116,7 +116,7 @@ area = {
 							nextMove = 0;
 						}
 					}
-				} catch (err) { console.log("Game Over") }
+				} catch (err) {}
 				try {
 					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= snakey.velocity) {
 						m[i][j].color = 2;
@@ -130,7 +130,7 @@ area = {
 							nextMove = 0;
 						}
 					}
-				} catch (err) { console.log("Game Over") }
+				} catch (err) {}
 			}
 		}
 		food.update();
