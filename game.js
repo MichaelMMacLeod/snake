@@ -18,17 +18,17 @@ area = {
 			config.BLUE_2,
 			config.BLUE_3,
 			config.BLUE_4);
-		nextMove = 0;
-		score = 0;
-		m = [];
+		this.nextMove = 0;
+		this.m = [];
 		for (var i = 0; i < 30; i++) {
-			m[i] = [];
+			this.m[i] = [];
 			for (var j = 0; j < 30; j++) {
-				m[i][j] = new square(i, j, 0);
+				this.m[i][j] = new square(i, j, 0);
 			}
 		}
+		this.score = 0;
 		this.direction = 0;
-		m[15][15].color = 1;
+		this.m[15][15].color = 1;
 		this.canvas.width = 598;
 		this.canvas.height = 598;
 		this.context = this.canvas.getContext("2d");
@@ -45,7 +45,7 @@ area = {
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
-	update : function() {
+	getInput : function() {
 		if (area.keys && this.direction != "right" && area.keys[config.KEY_LEFT]) {
 			this.direction = "left";
 		}
@@ -70,91 +70,99 @@ area = {
 		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN_2]) {
 			this.direction = "down";
 		}
-		for (var i = 0; i < m.length; i++) {
-			for (var j = 0; j < m.length; j++) {
-				if (m[i][j].color == 3) {
-					candy = false;
-				}
+	},
+	update : function() {
+		area.getInput();
+		for (var i = 0; i < this.m.length; i++) {
+			for (var j = 0; j < this.m.length; j++) {
 				try {
-					if (m[i][j].color == 1 && this.direction == "left" && nextMove >= snakey.velocity) {
-						m[i][j].color = 2;
-						if (m[i][j - 1].color == 3) {
+					if (this.m[i][j].color == 1 && this.direction == "left" && this.nextMove >= snakey.velocity) {
+						this.m[i][j].color = 2;
+						if (this.m[i][j - 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
-							score += config.SCORE_CANDY; 
+							this.score += config.SCORE_CANDY; 
 						}
-						if (m[i][j - 1].color == 0 || m[i][j - 1].color == 3) {
-							m[i][j - 1].color = 1;
-							m[i][j - 1].life = 0;
-							nextMove = 0;
+						if (this.m[i][j - 1].color == 0 || this.m[i][j - 1].color == 3) {
+							this.m[i][j - 1].color = 1;
+							this.m[i][j - 1].life = 0;
+							this.nextMove = 0;
 						}
 					}
 				} catch (err) {}
 				try {
-					if (m[i][j].color == 1 && this.direction == "up" && nextMove >= snakey.velocity) {
-						m[i][j].color = 2;
-						if (m[i - 1][j].color == 3) {
+					if (this.m[i][j].color == 1 && this.direction == "up" && this.nextMove >= snakey.velocity) {
+						this.m[i][j].color = 2;
+						if (this.m[i - 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
-							score += config.SCORE_CANDY; 
+							this.score += config.SCORE_CANDY; 
 						}
-						if (m[i - 1][j].color == 0 || m[i - 1][j].color == 3) {
-							m[i - 1][j].color = 1;
-							m[i - 1][j].life = 0;
-							nextMove = 0;
+						if (this.m[i - 1][j].color == 0 || this.m[i - 1][j].color == 3) {
+							this.m[i - 1][j].color = 1;
+							this.m[i - 1][j].life = 0;
+							this.nextMove = 0;
 						}
 					}
 				} catch (err) {}
 				try {
-					if (m[i][j].color == 1 && this.direction == "right" && nextMove >= snakey.velocity) {
-						m[i][j].color = 2;
-						if (m[i][j + 1].color == 3) {
+					if (this.m[i][j].color == 1 && this.direction == "right" && this.nextMove >= snakey.velocity) {
+						this.m[i][j].color = 2;
+						if (this.m[i][j + 1].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
-							score += config.SCORE_CANDY; 
+							this.score += config.SCORE_CANDY; 
 						}
-						if (m[i][j + 1].color == 0 || m[i][j + 1].color == 3) {
-							m[i][j + 1].color = 1;
-							m[i][j + 1].life = 0;
-							nextMove = 0;
+						if (this.m[i][j + 1].color == 0 || this.m[i][j + 1].color == 3) {
+							this.m[i][j + 1].color = 1;
+							this.m[i][j + 1].life = 0;
+							this.nextMove = 0;
 						}
 					}
 				} catch (err) {}
 				try {
-					if (m[i][j].color == 1 && this.direction == "down" && nextMove >= snakey.velocity) {
-						m[i][j].color = 2;
-						if (m[i + 1][j].color == 3) {
+					if (this.m[i][j].color == 1 && this.direction == "down" && this.nextMove >= snakey.velocity) {
+						this.m[i][j].color = 2;
+						if (this.m[i + 1][j].color == 3) {
 							config.LIFE_TIME += config.CANDY_AMOUNT;
-							score += config.SCORE_CANDY; 
+							this.score += config.SCORE_CANDY; 
 						}
-						if (m[i + 1][j].color == 0 || m[i + 1][j].color == 3) {
-							m[i + 1][j].color = 1;
-							m[i + 1][j].life = 0;
-							nextMove = 0;
+						if (this.m[i + 1][j].color == 0 || this.m[i + 1][j].color == 3) {
+							this.m[i + 1][j].color = 1;
+							this.m[i + 1][j].life = 0;
+							this.nextMove = 0;
 						}
 					}
 				} catch (err) {}
 			}
 		}
 		food.update();
-		document.title = score + " Points";
 	}
 }
 
 candy = function() {
 	this.update = function() {
 		var candy = true;
-		for (var i = 0; i < m.length; i++) {
-			for (var j = 0; j < m.length; j++) {
-				if (m[i][j].color == 3) {
+		for (var i = 0; i < area.m.length; i++) {
+			for (var j = 0; j < area.m.length; j++) {
+				if (area.m[i][j].color == 3) {
 					candy = false;
 				}
 			}
 		}
 		if (candy) {
-			m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
+			document.title = area.score + " Points";
+			area.m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
 		}
 	}
 }
 
-snake = function(invisible, velocity, snout, body_1, body_2, body_3, body_4) {
+snake = function(
+	invisible,  // True in hardcore mode; only last part of tail is visible
+	velocity,   // Current snake speed. A lower value makes for a faster snake
+	snout,      // The snake's head color
+	body_1,     // Color of the tiles closest to the tail
+	body_2,     // ...
+	body_3,     // ...
+	body_4      // Color of the tiles closest to the head
+	) {
 	this.invisible = invisible;
 	this.velocity = velocity;
 	this.snout = snout;
@@ -334,12 +342,12 @@ square = function(column, row, color) {
 }
 
 update = function() {
-	nextMove++;
+	area.nextMove++;
 	area.clear();
 	area.update();
-	for (var i = 0; i < m.length; i++) {
-		for (var j = 0; j < m.length; j++) {
-			m[i][j].update();
+	for (var i = 0; i < area.m.length; i++) {
+		for (var j = 0; j < area.m.length; j++) {
+			area.m[i][j].update();
 		}
 	}
 }
