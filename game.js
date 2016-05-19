@@ -195,6 +195,7 @@ snake = function(
 				this.body_3 = holder.body_3;
 				this.body_4 = holder.body_4;
 				document.getElementById("snakeColor").style.background = holder.body_1;
+				document.getElementById("chuckNorrisMode").style.background = "white";
 			break;
 			case false:
 				holder = new snake(
@@ -211,6 +212,7 @@ snake = function(
 				this.body_3 = config.EMPTY_TILE;
 				this.body_4 = config.EMPTY_TILE;
 				document.getElementById("snakeColor").style.background = config.BLACK;
+				document.getElementById("chuckNorrisMode").style.background = "red";
 			break;
 			default:
 			break;
@@ -276,7 +278,7 @@ snake = function(
 
 config = {
 	EASY_COLOR : "green",
-	MEDIUM_COLOR : "white",
+	MEDIUM_COLOR : "pink",
 	HARD_COLOR : "red",
 	WHITE : "white",
 	BLACK : "black",

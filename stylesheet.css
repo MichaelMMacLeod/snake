@@ -4,6 +4,22 @@ canvas {
 	background: gray;
 }
 
+#difficulty {
+	background-color: pink;
+}
+
+#snakeColor {
+	background-color: #9990ff;
+}
+
+#chuckNorrisMode {
+	background-color: white;
+}
+
+#reset {
+	background-color: white;
+}
+
 #menu {
 	float: left;
 	width: 100px;
