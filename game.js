@@ -220,18 +220,21 @@ snake = function(
 		switch (this.velocity) {
 			case config.NEXT_MOVE_TIME:
 				this.velocity = config.NEXT_MOVE_TIME_HARD;
+				holder.velocity = config.NEXT_MOVE_TIME_HARD;
 				candy.amount = 75;
 				document.getElementById("difficulty").innerHTML = "[Difficulty] Starving";
 				document.getElementById("difficulty").style.backgroundColor = config.HARD_COLOR;
 			break;
 			case config.NEXT_MOVE_TIME_HARD:
 				this.velocity = config.NEXT_MOVE_TIME_EASY;
+				holder.velocity = config.NEXT_MOVE_TIME_EASY;
 				candy.amount = 12;
 				document.getElementById("difficulty").innerHTML = "[Difficulty] Well-Fed";
 				document.getElementById("difficulty").style.backgroundColor = config.EASY_COLOR;
 			break;
 			case config.NEXT_MOVE_TIME_EASY:
 				this.velocity = config.NEXT_MOVE_TIME;
+				holder.velocity = config.NEXT_MOVE_TIME;
 				candy.amount = 25;
 				document.getElementById("difficulty").innerHTML = "[Difficulty] Hungry";
 				document.getElementById("difficulty").style.backgroundColor = config.MEDIUM_COLOR;
