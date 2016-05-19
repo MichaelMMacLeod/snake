@@ -42,6 +42,20 @@ area = {
 			area.keys[e.keyCode] = false;
 		})
 	},
+	reset : function() {
+		for (var i = 0; i < 30; i++) {
+			for (var j = 0; j < 30; j++) {
+				if (this.m.color != 0) {
+					this.m[i][j].color = 0;
+					this.m[i][j].life = 0;
+					this.score = 0;
+					config.LIFE_TIME = 30;
+				}
+			}
+			this.m[15][15].color = 1;
+			this.direction = 0;
+		}
+	},
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
