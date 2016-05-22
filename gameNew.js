@@ -1,0 +1,377 @@
+update = function()
+{
+	area.clear();
+	area.update();
+	for (var i = 0; i < 30; i++)
+	{
+		for (var j = 0; j < 30; j++)
+		{
+			area.m[i][j].update();
+		}
+	}
+}
+
+config = 
+{	
+	LENGTH_DEFAULT : 15,
+	LENGTH_ADD : 25,
+	KEY_ARROW_LEFT : 37,
+	KEY_ARROW_UP : 38,
+	KEY_ARROW_RIGHT : 39,
+	KEY_ARROW_DOWN : 40,
+	KEY_LEFT : 65,
+	KEY_UP : 87,
+	KEY_RIGHT : 68,
+	KEY_DOWN : 83,
+	LIFE_TIME : 15,
+	PIECE_BODY : "black",
+	PIECE_EMPTY : "gray",
+	PIECE_SNOUT : "white",
+	PIECE_CANDY : "red",
+	SPEED_NORMAL : 5,
+	SPEED_HARD : 3,
+	SPEED_EASY : 7,
+	DIFFICULTY_EASY_TEXT : "[Difficulty] Well-Fed", // Replace with pictures
+	DIFFICULTY_NORMAL_TEXT : "[Difficulty] Hungry", // Replace with pictures
+	DIFFICULTY_HARD_TEXT : "[Difficulty] Starving", // Replace with pictures
+	DIFFICULTY_EASY_COLOR : "green", // Replace with pictures
+	DIFFICULTY_NORMAL_COLOR : "pink", // Replace with pictures
+	DIFFICULTY_HARD_COLOR : "red" // Replace with pictures
+}
+
+area = 
+{
+	canvas : document.createElement('canvas'),
+	start : function() 
+	{
+		food = new candy();
+		snake = new player(
+			config.SPEED_NORMAL,
+			config.PIECE_SNOUT,
+			0,
+			config.LENGTH_DEFAULT,
+			"blue");
+		this.m = [];
+		for (var i = 0; i < 30; i++)
+		{
+			this.m[i] = [];
+			for (var j = 0; j < 30; j++)
+			{
+				this.m[i][j] = new piece(i, j, "empty");
+			}
+		}
+		this.m[15][15].color = "snout";
+		this.canvas.width = 598;
+		this.canvas.height = 598;
+		this.context = this.canvas.getContext("2d");
+		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+		this.interval = setInterval(update, 20);
+		window.addEventListener('keydown', function(e) 
+		{
+			area.keys = (area.keys || []);
+			area.keys[e.keyCode] = true;
+		})
+		window.addEventListener('keyup', function(e) 
+		{
+			area.keys[e.keyCode] = false;
+		})
+	},
+	clear : function()
+	{
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	},
+	reset : function()
+	{
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				this.m[i][j].color = "empty";
+				this.m[i][j].life = 0;
+				snake.length = config.LENGTH_DEFAULT;
+			}
+		}
+		this.m[15][15].color = "snout";
+		snake.direction = 0;
+		snake.log = [];
+	},
+	update : function()
+	{
+		food.update();
+		snake.newDirection();
+		this.nextMove = this.nextMove + 1 || 0;
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				try
+				{
+					if (snake.direction == "left" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						this.m[i][j].color = "body";
+						if (this.m[i][j - 1].color == "empty" ||
+							this.m[i][j - 1].color == "candy")
+						{
+							if (this.m[i][j - 1].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i][j - 1].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "up" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						this.m[i][j].color = "body";
+						if (this.m[i - 1][j].color == "empty" ||
+							this.m[i - 1][j].color == "candy") 
+						{
+							if (this.m[i - 1][j].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i - 1][j].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "right" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						this.m[i][j].color = "body";
+						if (this.m[i][j + 1].color == "empty" ||
+							this.m[i][j + 1].color == "candy")
+						{
+							if (this.m[i][j + 1].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i][j + 1].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "down" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						this.m[i][j].color = "body";
+						if (this.m[i + 1][j].color == "empty" ||
+							this.m[i + 1][j].color == "candy")
+						{
+							if (this.m[i + 1][j].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i + 1][j].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+				}
+				catch (e)
+				{}
+			}			
+		}
+	}
+}
+
+candy = function()
+{
+	this.update = function()
+	{
+		var candy = true;
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				if (area.m[i][j].color == "candy")
+				{
+					candy = false;
+				}
+			}
+		}
+		if (candy)
+		{
+			area.m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = "candy";
+		}
+	}
+}
+
+piece = function(
+	column,     // As column approaches +infinity, the piece moves downwards
+	row,        // As row approaches +infinity, the piece moves right
+	color       // Color of the tile. See config for values
+	)
+{
+	this.row = row * 20;
+	this.column = column * 20;
+	this.color = color;
+	this.life = 0;
+	this.update = function()
+	{
+		ctx = area.context;
+		ctx.save;
+		switch (this.color)
+		{
+			case "empty":
+				ctx.fillStyle = config.PIECE_EMPTY;
+			break;
+			case "snout":
+				ctx.fillStyle = snake.snout;
+			break;
+			case "body":
+				this.life++;
+				if (this.life > snake.length)
+				{
+					this.life = 0;
+					this.color = "empty";
+					this.update();
+				}
+				else
+				{
+					ctx.fillStyle = snake.color;
+				}
+			break;
+			case "candy":
+				ctx.fillStyle = config.PIECE_CANDY;
+			break;
+			default:
+			break;
+		}
+		ctx.fillRect(this.row, this.column, 18, 18);
+		ctx.restore;
+	}
+}
+
+player = function(
+	velocity,    // Current snake speed. A lower value makes for a faster snake
+	snout,       // The snake's head color
+	direction,   // Direction the snake is traveling
+	length,      // Length of the snake
+	color        // Color of the body of the snake
+	) 
+{
+	this.log = []; // Each movement key press is added to this list
+	this.velocity = velocity;
+	this.snout = snout;
+	this.direction = direction;
+	this.length = length;
+	this.color = color;
+	this.newColor = function()
+	{
+		switch (this.color) {
+			case "blue":
+				this.color = "green";
+				document.getElementById("snakeColor").style.backgroundColor = "green";
+			break;
+			case "green":
+				this.color = "purple";
+				document.getElementById("snakeColor").style.backgroundColor = "purple";
+			break;
+			case "purple":		
+				this.color = "blue";		
+				document.getElementById("snakeColor").style.backgroundColor = "blue";
+			break;
+			default:
+			break;
+		}
+	}
+	this.newDirection = function()
+	{
+		// Adds certain key presses to the log
+		if (area.keys && 
+			area.keys[config.KEY_LEFT] &&
+			this.log[this.log.length - 1] != "left" &&
+			this.log[this.log.length - 1] != "right")
+		{
+			this.log[this.log.length] = "left";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_UP] &&
+			this.log[this.log.length - 1] != "up" &&
+			this.log[this.log.length - 1] != "down")
+		{
+			this.log[this.log.length] = "up";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_RIGHT] &&
+			this.log[this.log.length - 1] != "right" &&
+			this.log[this.log.length - 1] != "left")
+		{
+			this.log[this.log.length] = "right";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_DOWN] &&
+			this.log[this.log.length - 1] != "down" &&
+			this.log[this.log.length - 1] != "up")
+		{
+			this.log[this.log.length] = "down";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_LEFT] &&
+			this.log[this.log.length - 1] != "left" &&
+			this.log[this.log.length - 1] != "right")
+		{
+			this.log[this.log.length] = "left";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_UP] &&
+			this.log[this.log.length - 1] != "up" &&
+			this.log[this.log.length - 1] != "down")
+		{
+			this.log[this.log.length] = "up";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_RIGHT] &&
+			this.log[this.log.length - 1] != "right" &&
+			this.log[this.log.length - 1] != "left")
+		{
+			this.log[this.log.length] = "right";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_DOWN] &&
+			this.log[this.log.length - 1] != "down" &&
+			this.log[this.log.length - 1] != "up")
+		{
+			this.log[this.log.length] = "down";
+		}
+		this.direction = this.log[0];
+		if (this.log.length > 2) 
+		// Holding down two keys won't clog up movement
+		{
+			this.log = [this.log[0], this.log[1]];
+		}
+		if (area.nextMove >= snake.velocity) 
+		{
+			if (this.log.length > 1)
+			{
+				this.log.shift();
+			}
+			this.direction = this.log[0];
+		}
+	}
+	this.speed = function() {
+		switch (this.velocity) {
+			case config.SPEED_NORMAL:
+				this.velocity = config.SPEED_HARD;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_HARD_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_HARD_COLOR; // Replace with pictures
+			break;
+			case config.SPEED_HARD:
+				this.velocity = config.SPEED_EASY;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_EASY_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_EASY_COLOR; // Replace with pictures
+			break;
+			case config.SPEED_EASY:
+				this.velocity = config.SPEED_NORMAL;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_NORMAL_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_NORMAL_COLOR; // Replace with pictures
+			break;
+			default:
+			break;
+		}
+	}
+}
