@@ -1,6 +1,7 @@
 area = {
 	canvas : document.createElement('canvas'),
 	start : function() {
+		keyPress = new keyHandler();
 		food = new candy();
 		snakey = new snake(
 			false,
@@ -31,15 +32,15 @@ area = {
 		this.m[15][15].color = 1;
 		this.canvas.width = 598;
 		this.canvas.height = 598;
+		this.newDirection = true;
 		this.context = this.canvas.getContext("2d");
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.interval = setInterval(update, 20);
 		window.addEventListener('keydown', function (e) {
-			area.keys = (area.keys || []);
-			area.keys[e.keyCode] = true;
+			keyPress.keyDown(e);
 		})
 		window.addEventListener('keyup', function (e) {
-			area.keys[e.keyCode] = false;
+			keyPress.keyUp(e);
 		})
 	},
 	reset : function() {
@@ -59,34 +60,14 @@ area = {
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
-	getInput : function() {
-		if (area.keys && this.direction != "right" && area.keys[config.KEY_LEFT]) {
-			this.direction = "left";
-		}
-		if (area.keys && this.direction != "right" && area.keys[config.KEY_LEFT_2]) {
-			this.direction = "left";
-		}
-		if (area.keys && this.direction != "down" && area.keys[config.KEY_UP]) {
-			this.direction = "up";
-		}
-		if (area.keys && this.direction != "down" && area.keys[config.KEY_UP_2]) {
-			this.direction = "up";
-		}
-		if (area.keys && this.direction != "left" && area.keys[config.KEY_RIGHT]) {
-			this.direction = "right";
-		}
-		if (area.keys && this.direction != "left" && area.keys[config.KEY_RIGHT_2]) {
-			this.direction = "right";
-		}
-		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN]) {
-			this.direction = "down";
-		}
-		if (area.keys && this.direction != "up" && area.keys[config.KEY_DOWN_2]) {
-			this.direction = "down";
-		}
-	},
 	update : function() {
-		area.getInput();
+		if (this.nextMove >= snakey.velocity) {
+			this.newDirection = true;
+		}
+		if (keyPress.log.length > 0 && this.newDirection) {
+			this.direction = keyPress.log[0];
+			this.newDirection = false;
+		}
 		for (var i = 0; i < this.m.length; i++) {
 			for (var j = 0; j < this.m.length; j++) {
 				try {
@@ -147,7 +128,48 @@ area = {
 				} catch (err) {}
 			}
 		}
+		keyPress.log.shift();
 		food.update();
+	}
+}
+
+keyHandler = function() {
+	this.log = [];
+	this.keyDown = function(key) {
+		this.keys = (this.keys || []);
+		this.keys[key.keyCode] = true;
+		this.update();
+	}
+	this.keyUp = function(key) {
+		this.keys[key.keyCode] = false;
+	}
+	this.update = function() {
+		if (this.keys) {
+			if (this.keys[config.A_KEY] && area.direction != "left" && area.direction != "right") {
+				this.log[this.log.length] = "left";
+			}
+			if (this.keys[config.W_KEY] && area.direction != "up" && area.direction != "down") {
+				this.log[this.log.length] = "up";
+			}
+			if (this.keys[config.D_KEY] && area.direction != "right" && area.direction != "left") {
+				this.log[this.log.length] = "right";
+			}
+			if (this.keys[config.S_KEY] && area.direction != "down" && area.direction != "up") {
+				this.log[this.log.length] = "down";
+			}
+			if (this.keys[config.LEFT_KEY] && area.direction != "left" && area.direction != "right") {
+				this.log[this.log.length] = "left";
+			}
+			if (this.keys[config.UP_KEY] && area.direction != "up" && area.direction != "down") {
+				this.log[this.log.length] = "up";
+			}
+			if (this.keys[config.RIGHT_KEY] && area.direction != "right" && area.direction != "left") {
+				this.log[this.log.length] = "right";
+			}
+			if (this.keys[config.DOWN_KEY] && area.direction != "down" && area.direction != "up") {
+				this.log[this.log.length] = "down";
+			}
+		}
 	}
 }
 
@@ -307,14 +329,14 @@ config = {
 	SNAKE_TILE_4 : "#9990ff",
 	CANDY_TILE : "#ff0000",
 	SNOUT_TILE : "white",
-	KEY_LEFT : 65,
-	KEY_UP : 87,
-	KEY_RIGHT : 68,
-	KEY_DOWN : 83,
-	KEY_LEFT_2 : 37,
-	KEY_UP_2 : 38,
-	KEY_RIGHT_2 : 39,
-	KEY_DOWN_2 : 40
+	A_KEY : 65,
+	W_KEY : 87,
+	D_KEY : 68,
+	S_KEY : 83,
+	RIGHT_KEY : 39,
+	UP_KEY : 38,
+	LEFT_KEY : 37,
+	DOWN_KEY : 40
 }
 
 square = function(column, row, color) {

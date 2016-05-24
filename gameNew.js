@@ -13,8 +13,8 @@ update = function()
 
 config = 
 {	
-	LENGTH_DEFAULT : 15,
-	LENGTH_ADD : 25,
+	LENGTH_DEFAULT : 20,
+	LENGTH_ADD : 20,
 	KEY_ARROW_LEFT : 37,
 	KEY_ARROW_UP : 38,
 	KEY_ARROW_RIGHT : 39,
@@ -50,7 +50,8 @@ area =
 			config.PIECE_SNOUT,
 			0,
 			config.LENGTH_DEFAULT,
-			"blue");
+			"blue",
+			false);
 		this.m = [];
 		for (var i = 0; i < 30; i++)
 		{
@@ -94,9 +95,18 @@ area =
 		this.m[15][15].color = "snout";
 		snake.direction = 0;
 		snake.log = [];
+		snake.body = [];
 	},
 	update : function()
 	{
+		if (snake.invisible)
+		{
+			document.title = Math.round(1.2 * snake.body.length) + " Points";
+		}
+		else
+		{
+			document.title = snake.body.length + " Points";
+		}
 		food.update();
 		snake.newDirection();
 		this.nextMove = this.nextMove + 1 || 0;
@@ -110,13 +120,14 @@ area =
 						this.nextMove > snake.velocity && 
 						this.m[i][j].color == "snout")
 					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
 						this.m[i][j].color = "body";
 						if (this.m[i][j - 1].color == "empty" ||
 							this.m[i][j - 1].color == "candy")
 						{
 							if (this.m[i][j - 1].color == "candy")
 							{
-								snake.length += config.LENGTH_ADD; 
+								snake.length += config.LENGTH_ADD;
 							}
 							this.m[i][j - 1].color = "snout";
 							this.nextMove = 0;
@@ -126,6 +137,7 @@ area =
 						this.nextMove > snake.velocity && 
 						this.m[i][j].color == "snout")
 					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
 						this.m[i][j].color = "body";
 						if (this.m[i - 1][j].color == "empty" ||
 							this.m[i - 1][j].color == "candy") 
@@ -142,6 +154,7 @@ area =
 						this.nextMove > snake.velocity && 
 						this.m[i][j].color == "snout")
 					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
 						this.m[i][j].color = "body";
 						if (this.m[i][j + 1].color == "empty" ||
 							this.m[i][j + 1].color == "candy")
@@ -158,6 +171,7 @@ area =
 						this.nextMove > snake.velocity && 
 						this.m[i][j].color == "snout")
 					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
 						this.m[i][j].color = "body";
 						if (this.m[i + 1][j].color == "empty" ||
 							this.m[i + 1][j].color == "candy")
@@ -195,7 +209,22 @@ candy = function()
 		}
 		if (candy)
 		{
-			area.m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = "candy";
+			// hold onto your pants; this might take a while depending on how the gods of randomness are feeling today. By brute force, it places a piece of food on an unoccupied tile.
+			var column = Math.floor((Math.random() * 30));
+			var row = Math.floor((Math.random() * 30));
+			var draw = true;
+			for (var i = 0; i < snake.body.length; i++)
+			{
+				if (area.m[column][row].color == "body" ||
+					area.m[column][row].color == "snout")
+				{
+					draw = false;
+				}
+			}
+			if (draw)
+			{
+				area.m[column][row].color = "candy";
+			}
 		}
 	}
 }
@@ -226,13 +255,76 @@ piece = function(
 				this.life++;
 				if (this.life > snake.length)
 				{
+					snake.body.shift();
 					this.life = 0;
 					this.color = "empty";
 					this.update();
 				}
 				else
 				{
-					ctx.fillStyle = snake.color;
+					if (!snake.invisible) 
+					{
+						for (var i = 0; i < snake.body.length; i++)
+						{
+							if (snake.body[i].column == this.column &&
+								snake.body[i].row == this.row)
+							{
+								switch (snake.color) 
+								{
+									case "blue":
+										var r = 0;
+										var g = 0;
+										var b = 255;
+										r += Math.round(255 / snake.body.length * i);
+										g += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									case "green":
+										var r = 0;
+										var g = 255;
+										var b = 0;
+										r += Math.round(255 / snake.body.length * i);
+										b += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									case "purple":
+										var r = 255;
+										var g = 0;
+										var b = 255;
+										g += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									default:
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						if (snake.body[0].column == this.column &&
+							snake.body[0].row == this.row)
+						{
+							switch (snake.color)
+							{
+								case "blue":
+									ctx.fillStyle = "rgb(0, 0, 255)";
+								break;
+								case "green":
+									ctx.fillStyle = "rgb(0, 255, 0)";
+								break;
+								case "purple":
+									ctx.fillStyle = "rgb(255, 0, 255)";
+								break;
+								default:
+								break;
+							}
+						}
+						else
+						{
+							ctx.fillStyle = config.PIECE_EMPTY;
+						}
+					}
 				}
 			break;
 			case "candy":
@@ -246,34 +338,47 @@ piece = function(
 	}
 }
 
+bodyPart = function(
+	column,        // As column approaches +infinity, the piece moves downwards
+	row            // As row approaches +infinity, the piece moves right
+	)
+{
+	this.column = column * 20;
+	this.row = row * 20;
+}
+
 player = function(
 	velocity,    // Current snake speed. A lower value makes for a faster snake
 	snout,       // The snake's head color
 	direction,   // Direction the snake is traveling
 	length,      // Length of the snake
-	color        // Color of the body of the snake
+	color,       // Color of the body of the snake
+	invisible    // Turns every tile except the first and last invisible.
 	) 
 {
-	this.log = []; // Each movement key press is added to this list
+	this.log = []; // Each movement key press is added to this array
+	this.body = []; // Each snake tile (aside from head) is added to this array
 	this.velocity = velocity;
 	this.snout = snout;
 	this.direction = direction;
 	this.length = length;
 	this.color = color;
+	this.invisible = invisible;
+	this.hardcore = function()
+	{
+		this.invisible = !this.invisible;
+	}
 	this.newColor = function()
 	{
 		switch (this.color) {
 			case "blue":
 				this.color = "green";
-				document.getElementById("snakeColor").style.backgroundColor = "green";
 			break;
 			case "green":
 				this.color = "purple";
-				document.getElementById("snakeColor").style.backgroundColor = "purple";
 			break;
 			case "purple":		
-				this.color = "blue";		
-				document.getElementById("snakeColor").style.backgroundColor = "blue";
+				this.color = "blue";
 			break;
 			default:
 			break;
@@ -340,7 +445,7 @@ player = function(
 		}
 		this.direction = this.log[0];
 		if (this.log.length > 2) 
-		// Holding down two keys won't clog up movement
+		// Holding down two keys won't clog up the array
 		{
 			this.log = [this.log[0], this.log[1]];
 		}
@@ -358,17 +463,14 @@ player = function(
 			case config.SPEED_NORMAL:
 				this.velocity = config.SPEED_HARD;
 				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_HARD_TEXT; // Replace with pictures
-				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_HARD_COLOR; // Replace with pictures
 			break;
 			case config.SPEED_HARD:
 				this.velocity = config.SPEED_EASY;
 				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_EASY_TEXT; // Replace with pictures
-				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_EASY_COLOR; // Replace with pictures
 			break;
 			case config.SPEED_EASY:
 				this.velocity = config.SPEED_NORMAL;
 				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_NORMAL_TEXT; // Replace with pictures
-				document.getElementById("difficulty").style.backgroundColor = config.DIFFICULTY_NORMAL_COLOR; // Replace with pictures
 			break;
 			default:
 			break;
