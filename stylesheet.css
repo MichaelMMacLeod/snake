@@ -33,4 +33,5 @@ canvas {
 	height: 99px;
 	margin-bottom: 0px;
 	background-color: seashell;
+	outline: none;
 }
