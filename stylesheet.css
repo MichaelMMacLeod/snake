@@ -1,5 +1,5 @@
 canvas {
-	border: 0px;
+	border: none;
 	float: left;
 	background: silver;
 }
@@ -9,7 +9,7 @@ canvas {
 }
 
 #snakeColor {
-
+	background-image: url("button-color-blue.png");
 }
 
 #chuckNorrisMode {
@@ -30,8 +30,9 @@ canvas {
 
 .button {
 	width: 100px;
-	height: 99px;
+	height: 100px;
 	margin-bottom: 0px;
-	background-color: seashell;
+	background-color: white;
 	outline: none;
+	border: none;
 }

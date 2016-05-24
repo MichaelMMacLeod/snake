@@ -372,12 +372,15 @@ player = function(
 		switch (this.color) {
 			case "blue":
 				this.color = "green";
+				document.getElementById("snakeColor").style.backgroundImage = "url('button-color-green.png')";
 			break;
 			case "green":
 				this.color = "purple";
+				document.getElementById("snakeColor").style.backgroundImage = "url('button-color-pink.png')";
 			break;
 			case "purple":		
 				this.color = "blue";
+				document.getElementById("snakeColor").style.backgroundImage = "url('button-color-blue.png')";
 			break;
 			default:
 			break;
