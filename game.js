@@ -1,394 +1,479 @@
-area = {
+update = function()
+{
+	area.clear();
+	area.update();
+	for (var i = 0; i < 30; i++)
+	{
+		for (var j = 0; j < 30; j++)
+		{
+			area.m[i][j].update();
+		}
+	}
+}
+
+config = 
+{	
+	LENGTH_DEFAULT : 20,
+	LENGTH_ADD : 20,
+	KEY_ARROW_LEFT : 37,
+	KEY_ARROW_UP : 38,
+	KEY_ARROW_RIGHT : 39,
+	KEY_ARROW_DOWN : 40,
+	KEY_LEFT : 65,
+	KEY_UP : 87,
+	KEY_RIGHT : 68,
+	KEY_DOWN : 83,
+	LIFE_TIME : 15,
+	PIECE_BODY : "black",
+	PIECE_EMPTY : "gray",
+	PIECE_SNOUT : "white",
+	PIECE_CANDY : "red",
+	SPEED_NORMAL : 5,
+	SPEED_HARD : 3,
+	SPEED_EASY : 7,
+	DIFFICULTY_EASY_TEXT : "[Difficulty] Well-Fed", // Replace with pictures
+	DIFFICULTY_NORMAL_TEXT : "[Difficulty] Hungry", // Replace with pictures
+	DIFFICULTY_HARD_TEXT : "[Difficulty] Starving", // Replace with pictures
+	DIFFICULTY_EASY_COLOR : "green", // Replace with pictures
+	DIFFICULTY_NORMAL_COLOR : "pink", // Replace with pictures
+	DIFFICULTY_HARD_COLOR : "red" // Replace with pictures
+}
+
+area = 
+{
 	canvas : document.createElement('canvas'),
-	start : function() {
-		keyPress = new keyHandler();
+	start : function() 
+	{
 		food = new candy();
-		snakey = new snake(
-			false,
-			config.NEXT_MOVE_TIME, 
-			config.SNOUT_TILE,
-			config.BLUE_1,
-			config.BLUE_2,
-			config.BLUE_3,
-			config.BLUE_4);
-		holder = new snake(
-			false,
-			config.NEXT_MOVE_TIME, 
-			config.SNOUT_TILE,
-			config.BLUE_1,
-			config.BLUE_2,
-			config.BLUE_3,
-			config.BLUE_4);
-		this.nextMove = 0;
+		snake = new player(
+			config.SPEED_NORMAL,
+			config.PIECE_SNOUT,
+			0,
+			config.LENGTH_DEFAULT,
+			"blue",
+			false);
 		this.m = [];
-		for (var i = 0; i < 30; i++) {
+		for (var i = 0; i < 30; i++)
+		{
 			this.m[i] = [];
-			for (var j = 0; j < 30; j++) {
-				this.m[i][j] = new square(i, j, 0);
+			for (var j = 0; j < 30; j++)
+			{
+				this.m[i][j] = new piece(i, j, "empty");
 			}
 		}
-		this.score = 0;
-		this.direction = 0;
-		this.m[15][15].color = 1;
+		this.m[15][15].color = "snout";
 		this.canvas.width = 598;
 		this.canvas.height = 598;
-		this.newDirection = true;
 		this.context = this.canvas.getContext("2d");
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.interval = setInterval(update, 20);
-		window.addEventListener('keydown', function (e) {
-			keyPress.keyDown(e);
+		window.addEventListener('keydown', function(e) 
+		{
+			area.keys = (area.keys || []);
+			area.keys[e.keyCode] = true;
 		})
-		window.addEventListener('keyup', function (e) {
-			keyPress.keyUp(e);
+		window.addEventListener('keyup', function(e) 
+		{
+			area.keys[e.keyCode] = false;
 		})
 	},
-	reset : function() {
-		for (var i = 0; i < 30; i++) {
-			for (var j = 0; j < 30; j++) {
-				if (this.m.color != 0) {
-					this.m[i][j].color = 0;
-					this.m[i][j].life = 0;
-					this.score = 0;
-					config.LIFE_TIME = 30;
-				}
-			}
-			this.m[15][15].color = 1;
-			this.direction = 0;
-		}
-	},
-	clear : function() {
+	clear : function()
+	{
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
-	update : function() {
-		if (this.nextMove >= snakey.velocity) {
-			this.newDirection = true;
-		}
-		if (keyPress.log.length > 0 && this.newDirection) {
-			this.direction = keyPress.log[0];
-			this.newDirection = false;
-		}
-		for (var i = 0; i < this.m.length; i++) {
-			for (var j = 0; j < this.m.length; j++) {
-				try {
-					if (this.m[i][j].color == 1 && this.direction == "left" && this.nextMove >= snakey.velocity) {
-						this.m[i][j].color = 2;
-						if (this.m[i][j - 1].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT;
-							this.score += config.SCORE_CANDY; 
-						}
-						if (this.m[i][j - 1].color == 0 || this.m[i][j - 1].color == 3) {
-							this.m[i][j - 1].color = 1;
-							this.m[i][j - 1].life = 0;
-							this.nextMove = 0;
-						}
-					}
-				} catch (err) {}
-				try {
-					if (this.m[i][j].color == 1 && this.direction == "up" && this.nextMove >= snakey.velocity) {
-						this.m[i][j].color = 2;
-						if (this.m[i - 1][j].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT;
-							this.score += config.SCORE_CANDY; 
-						}
-						if (this.m[i - 1][j].color == 0 || this.m[i - 1][j].color == 3) {
-							this.m[i - 1][j].color = 1;
-							this.m[i - 1][j].life = 0;
-							this.nextMove = 0;
-						}
-					}
-				} catch (err) {}
-				try {
-					if (this.m[i][j].color == 1 && this.direction == "right" && this.nextMove >= snakey.velocity) {
-						this.m[i][j].color = 2;
-						if (this.m[i][j + 1].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT;
-							this.score += config.SCORE_CANDY; 
-						}
-						if (this.m[i][j + 1].color == 0 || this.m[i][j + 1].color == 3) {
-							this.m[i][j + 1].color = 1;
-							this.m[i][j + 1].life = 0;
-							this.nextMove = 0;
-						}
-					}
-				} catch (err) {}
-				try {
-					if (this.m[i][j].color == 1 && this.direction == "down" && this.nextMove >= snakey.velocity) {
-						this.m[i][j].color = 2;
-						if (this.m[i + 1][j].color == 3) {
-							config.LIFE_TIME += config.CANDY_AMOUNT;
-							this.score += config.SCORE_CANDY; 
-						}
-						if (this.m[i + 1][j].color == 0 || this.m[i + 1][j].color == 3) {
-							this.m[i + 1][j].color = 1;
-							this.m[i + 1][j].life = 0;
-							this.nextMove = 0;
-						}
-					}
-				} catch (err) {}
+	reset : function()
+	{
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				this.m[i][j].color = "empty";
+				this.m[i][j].life = 0;
+				snake.length = config.LENGTH_DEFAULT;
 			}
 		}
-		keyPress.log.shift();
+		this.m[15][15].color = "snout";
+		snake.direction = 0;
+		snake.log = [];
+		snake.body = [];
+	},
+	update : function()
+	{
+		if (snake.invisible)
+		{
+			document.title = Math.round(1.2 * snake.body.length) + " Points";
+		}
+		else
+		{
+			document.title = snake.body.length + " Points";
+		}
 		food.update();
-	}
-}
-
-keyHandler = function() {
-	this.log = [];
-	this.keyDown = function(key) {
-		this.keys = (this.keys || []);
-		this.keys[key.keyCode] = true;
-		this.update();
-	}
-	this.keyUp = function(key) {
-		this.keys[key.keyCode] = false;
-	}
-	this.update = function() {
-		if (this.keys) {
-			if (this.keys[config.A_KEY] && area.direction != "left" && area.direction != "right") {
-				this.log[this.log.length] = "left";
-			}
-			if (this.keys[config.W_KEY] && area.direction != "up" && area.direction != "down") {
-				this.log[this.log.length] = "up";
-			}
-			if (this.keys[config.D_KEY] && area.direction != "right" && area.direction != "left") {
-				this.log[this.log.length] = "right";
-			}
-			if (this.keys[config.S_KEY] && area.direction != "down" && area.direction != "up") {
-				this.log[this.log.length] = "down";
-			}
-			if (this.keys[config.LEFT_KEY] && area.direction != "left" && area.direction != "right") {
-				this.log[this.log.length] = "left";
-			}
-			if (this.keys[config.UP_KEY] && area.direction != "up" && area.direction != "down") {
-				this.log[this.log.length] = "up";
-			}
-			if (this.keys[config.RIGHT_KEY] && area.direction != "right" && area.direction != "left") {
-				this.log[this.log.length] = "right";
-			}
-			if (this.keys[config.DOWN_KEY] && area.direction != "down" && area.direction != "up") {
-				this.log[this.log.length] = "down";
-			}
+		snake.newDirection();
+		this.nextMove = this.nextMove + 1 || 0;
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				try
+				{
+					if (snake.direction == "left" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
+						this.m[i][j].color = "body";
+						if (this.m[i][j - 1].color == "empty" ||
+							this.m[i][j - 1].color == "candy")
+						{
+							if (this.m[i][j - 1].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD;
+							}
+							this.m[i][j - 1].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "up" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
+						this.m[i][j].color = "body";
+						if (this.m[i - 1][j].color == "empty" ||
+							this.m[i - 1][j].color == "candy") 
+						{
+							if (this.m[i - 1][j].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i - 1][j].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "right" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
+						this.m[i][j].color = "body";
+						if (this.m[i][j + 1].color == "empty" ||
+							this.m[i][j + 1].color == "candy")
+						{
+							if (this.m[i][j + 1].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i][j + 1].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+					if (snake.direction == "down" && 
+						this.nextMove > snake.velocity && 
+						this.m[i][j].color == "snout")
+					{
+						snake.body[snake.body.length] = new bodyPart(i, j); 
+						this.m[i][j].color = "body";
+						if (this.m[i + 1][j].color == "empty" ||
+							this.m[i + 1][j].color == "candy")
+						{
+							if (this.m[i + 1][j].color == "candy")
+							{
+								snake.length += config.LENGTH_ADD; 
+							}
+							this.m[i + 1][j].color = "snout";
+							this.nextMove = 0;
+						}
+					}
+				}
+				catch (e)
+				{}
+			}			
 		}
 	}
 }
 
-candy = function() {
-	this.update = function() {
+candy = function()
+{
+	this.update = function()
+	{
 		var candy = true;
-		for (var i = 0; i < area.m.length; i++) {
-			for (var j = 0; j < area.m.length; j++) {
-				if (area.m[i][j].color == 3) {
+		for (var i = 0; i < 30; i++)
+		{
+			for (var j = 0; j < 30; j++)
+			{
+				if (area.m[i][j].color == "candy")
+				{
 					candy = false;
 				}
 			}
 		}
-		if (candy) {
-			document.title = area.score + " Points";
-			area.m[Math.floor((Math.random() * 30))][Math.floor((Math.random() * 30))].color = 3;
-		}
-	}
-}
-
-snake = function(
-	invisible,  // True in hardcore mode; only last part of tail is visible
-	velocity,   // Current snake speed. A lower value makes for a faster snake
-	snout,      // The snake's head color
-	body_1,     // Color of the tiles closest to the tail
-	body_2,     // ...
-	body_3,     // ...
-	body_4      // Color of the tiles closest to the head
-	) {
-	this.invisible = invisible;
-	this.velocity = velocity;
-	this.snout = snout;
-	this.body_1 = body_1;
-	this.body_2 = body_2;
-	this.body_3 = body_3;
-	this.body_4 = body_4;
-	this.hardcore = function() {
-		switch (this.invisible) {
-			case true:
-				this.invisible = holder.invisible;
-				this.velocity = holder.velocity;
-				this.snout = holder.snout;
-				this.body_1 = holder.body_1;
-				this.body_2 = holder.body_2;
-				this.body_3 = holder.body_3;
-				this.body_4 = holder.body_4;
-				document.getElementById("snakeColor").style.background = holder.body_1;
-				document.getElementById("chuckNorrisMode").style.background = "white";
-			break;
-			case false:
-				holder = new snake(
-					this.invisible,
-					this.velocity,
-					this.snout,
-					this.body_1,
-					this.body_2,
-					this.body_3,
-					this.body_4);
-				this.invisible = true;
-				this.body_1 = config.BLACK;
-				this.body_2 = config.EMPTY_TILE;
-				this.body_3 = config.EMPTY_TILE;
-				this.body_4 = config.EMPTY_TILE;
-				document.getElementById("snakeColor").style.background = config.BLACK;
-				document.getElementById("chuckNorrisMode").style.background = "red";
-			break;
-			default:
-			break;
-		}
-	}
-	this.speed = function() {
-		switch (this.velocity) {
-			case config.NEXT_MOVE_TIME:
-				this.velocity = config.NEXT_MOVE_TIME_HARD;
-				holder.velocity = config.NEXT_MOVE_TIME_HARD;
-				candy.amount = 75;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Starving";
-				document.getElementById("difficulty").style.backgroundColor = config.HARD_COLOR;
-			break;
-			case config.NEXT_MOVE_TIME_HARD:
-				this.velocity = config.NEXT_MOVE_TIME_EASY;
-				holder.velocity = config.NEXT_MOVE_TIME_EASY;
-				candy.amount = 12;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Well-Fed";
-				document.getElementById("difficulty").style.backgroundColor = config.EASY_COLOR;
-			break;
-			case config.NEXT_MOVE_TIME_EASY:
-				this.velocity = config.NEXT_MOVE_TIME;
-				holder.velocity = config.NEXT_MOVE_TIME;
-				candy.amount = 25;
-				document.getElementById("difficulty").innerHTML = "[Difficulty] Hungry";
-				document.getElementById("difficulty").style.backgroundColor = config.MEDIUM_COLOR;
-			break;
-			default:
-			break;
-		}
-	}
-	this.color = function() {
-		if (!this.invisible) {
-			switch (this.body_1) {
-				case config.BLUE_1:
-					this.body_1 = config.GREEN_1;
-					this.body_2 = config.GREEN_2;
-					this.body_3 = config.GREEN_3;
-					this.body_4 = config.GREEN_4;
-					document.getElementById("snakeColor").style.backgroundColor = config.GREEN_1;
-				break;
-				case config.GREEN_1:
-					this.body_1 = config.PURPLE_1;
-					this.body_2 = config.PURPLE_2;
-					this.body_3 = config.PURPLE_3;
-					this.body_4 = config.PURPLE_4;
-					document.getElementById("snakeColor").style.backgroundColor = config.PURPLE_1;
-				break;
-				case config.PURPLE_1:				
-					this.body_1 = config.BLUE_1;
-					this.body_2 = config.BLUE_2;
-					this.body_3 = config.BLUE_3;
-					this.body_4 = config.BLUE_4;
-					document.getElementById("snakeColor").style.backgroundColor = config.BLUE_1;
-				break;
-				default:
-				break;
+		if (candy)
+		{
+			// hold onto your pants; this might take a while depending on how the gods of randomness are feeling today. By brute force, it places a piece of food on an unoccupied tile.
+			var column = Math.floor((Math.random() * 30));
+			var row = Math.floor((Math.random() * 30));
+			var draw = true;
+			for (var i = 0; i < snake.body.length; i++)
+			{
+				if (area.m[column][row].color == "body" ||
+					area.m[column][row].color == "snout")
+				{
+					draw = false;
+				}
+			}
+			if (draw)
+			{
+				area.m[column][row].color = "candy";
 			}
 		}
 	}
 }
 
-config = {
-	EASY_COLOR : "green",
-	MEDIUM_COLOR : "pink",
-	HARD_COLOR : "red",
-	WHITE : "white",
-	BLACK : "black",
-	BLUE_1 : "#9990ff",
-	BLUE_2 : "#5e4fff",
-	BLUE_3 : "#3e2dff",
-	BLUE_4 : "#1500ff",
-	GREEN_1 : "#00fb50",
-	GREEN_2 : "#00db30",
-	GREEN_3 : "#00a925",
-	GREEN_4 : "#00761a",
-	PURPLE_1 : "#7c00ff",
-	PURPLE_2 : "#5700b2",
-	PURPLE_3 : "#420087",
-	PURPLE_4 : "#2a0056",
-	NEXT_MOVE_TIME : 5,
-	NEXT_MOVE_TIME_EASY : 7,
-	NEXT_MOVE_TIME_HARD : 3,
-	LIFE_TIME : 30,
-	CANDY_AMOUNT : 30,
-	SCORE_CANDY : 10,
-	EMPTY_TILE : "gray",
-	SNAKE_TILE_1 : "#1500ff",
-	SNAKE_TILE_2 : "#3e2dff",
-	SNAKE_TILE_3 : "#5e4fff",
-	SNAKE_TILE_4 : "#9990ff",
-	CANDY_TILE : "#ff0000",
-	SNOUT_TILE : "white",
-	A_KEY : 65,
-	W_KEY : 87,
-	D_KEY : 68,
-	S_KEY : 83,
-	RIGHT_KEY : 39,
-	UP_KEY : 38,
-	LEFT_KEY : 37,
-	DOWN_KEY : 40
-}
-
-square = function(column, row, color) {
+piece = function(
+	column,     // As column approaches +infinity, the piece moves downwards
+	row,        // As row approaches +infinity, the piece moves right
+	color       // Color of the tile. See config for values
+	)
+{
 	this.row = row * 20;
 	this.column = column * 20;
 	this.color = color;
 	this.life = 0;
-	this.update = function() {
+	this.update = function()
+	{
 		ctx = area.context;
 		ctx.save;
-		switch(this.color) {
-			case 0:
-				ctx.fillStyle = config.EMPTY_TILE;
-				break;
-			case 1:
-				ctx.fillStyle = snakey.snout;
-				break;
-			case 2:
+		switch (this.color)
+		{
+			case "empty":
+				ctx.fillStyle = config.PIECE_EMPTY;
+			break;
+			case "snout":
+				ctx.fillStyle = snake.snout;
+			break;
+			case "body":
 				this.life++;
-				if (this.life >= config.LIFE_TIME) {
-					ctx.fillStyle = config.EMPTY_TILE;
-					this.color = 0;
-				} else {
-					if (this.life / config.LIFE_TIME >= 0.75) {
-						ctx.fillStyle = snakey.body_1;
-					} else if (this.life / config.LIFE_TIME >= 0.50) {
-						ctx.fillStyle = snakey.body_2;
-					} else if (this.life / config.LIFE_TIME >= 0.25) {
-						ctx.fillStyle = snakey.body_3;
-					} else if (this.life / config.LIFE_TIME >= 0.00) {
-						ctx.fillStyle = snakey.body_4;
+				if (this.life > snake.length)
+				{
+					snake.body.shift();
+					this.life = 0;
+					this.color = "empty";
+					this.update();
+				}
+				else
+				{
+					if (!snake.invisible) 
+					{
+						for (var i = 0; i < snake.body.length; i++)
+						{
+							if (snake.body[i].column == this.column &&
+								snake.body[i].row == this.row)
+							{
+								switch (snake.color) 
+								{
+									case "blue":
+										var r = 0;
+										var g = 0;
+										var b = 255;
+										r += Math.round(255 / snake.body.length * i);
+										g += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									case "green":
+										var r = 0;
+										var g = 255;
+										var b = 0;
+										r += Math.round(255 / snake.body.length * i);
+										b += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									case "purple":
+										var r = 255;
+										var g = 0;
+										var b = 255;
+										g += Math.round(255 / snake.body.length * i);
+										ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+									break;
+									default:
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						if (snake.body[0].column == this.column &&
+							snake.body[0].row == this.row)
+						{
+							switch (snake.color)
+							{
+								case "blue":
+									ctx.fillStyle = "rgb(0, 0, 255)";
+								break;
+								case "green":
+									ctx.fillStyle = "rgb(0, 255, 0)";
+								break;
+								case "purple":
+									ctx.fillStyle = "rgb(255, 0, 255)";
+								break;
+								default:
+								break;
+							}
+						}
+						else
+						{
+							ctx.fillStyle = config.PIECE_EMPTY;
+						}
 					}
 				}
-				break;
-			case 3:
-				ctx.fillStyle = config.CANDY_TILE;
-				break;
+			break;
+			case "candy":
+				ctx.fillStyle = config.PIECE_CANDY;
+			break;
 			default:
-				break;
+			break;
 		}
 		ctx.fillRect(this.row, this.column, 18, 18);
 		ctx.restore;
 	}
 }
 
-update = function() {
-	area.nextMove++;
-	area.clear();
-	area.update();
-	for (var i = 0; i < area.m.length; i++) {
-		for (var j = 0; j < area.m.length; j++) {
-			area.m[i][j].update();
+bodyPart = function(
+	column,        // As column approaches +infinity, the piece moves downwards
+	row            // As row approaches +infinity, the piece moves right
+	)
+{
+	this.column = column * 20;
+	this.row = row * 20;
+}
+
+player = function(
+	velocity,    // Current snake speed. A lower value makes for a faster snake
+	snout,       // The snake's head color
+	direction,   // Direction the snake is traveling
+	length,      // Length of the snake
+	color,       // Color of the body of the snake
+	invisible    // Turns every tile except the first and last invisible.
+	) 
+{
+	this.log = []; // Each movement key press is added to this array
+	this.body = []; // Each snake tile (aside from head) is added to this array
+	this.velocity = velocity;
+	this.snout = snout;
+	this.direction = direction;
+	this.length = length;
+	this.color = color;
+	this.invisible = invisible;
+	this.hardcore = function()
+	{
+		this.invisible = !this.invisible;
+	}
+	this.newColor = function()
+	{
+		switch (this.color) {
+			case "blue":
+				this.color = "green";
+			break;
+			case "green":
+				this.color = "purple";
+			break;
+			case "purple":		
+				this.color = "blue";
+			break;
+			default:
+			break;
+		}
+	}
+	this.newDirection = function()
+	{
+		// Adds certain key presses to the log
+		if (area.keys && 
+			area.keys[config.KEY_LEFT] &&
+			this.log[this.log.length - 1] != "left" &&
+			this.log[this.log.length - 1] != "right")
+		{
+			this.log[this.log.length] = "left";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_UP] &&
+			this.log[this.log.length - 1] != "up" &&
+			this.log[this.log.length - 1] != "down")
+		{
+			this.log[this.log.length] = "up";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_RIGHT] &&
+			this.log[this.log.length - 1] != "right" &&
+			this.log[this.log.length - 1] != "left")
+		{
+			this.log[this.log.length] = "right";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_DOWN] &&
+			this.log[this.log.length - 1] != "down" &&
+			this.log[this.log.length - 1] != "up")
+		{
+			this.log[this.log.length] = "down";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_LEFT] &&
+			this.log[this.log.length - 1] != "left" &&
+			this.log[this.log.length - 1] != "right")
+		{
+			this.log[this.log.length] = "left";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_UP] &&
+			this.log[this.log.length - 1] != "up" &&
+			this.log[this.log.length - 1] != "down")
+		{
+			this.log[this.log.length] = "up";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_RIGHT] &&
+			this.log[this.log.length - 1] != "right" &&
+			this.log[this.log.length - 1] != "left")
+		{
+			this.log[this.log.length] = "right";
+		}
+		if (area.keys && 
+			area.keys[config.KEY_ARROW_DOWN] &&
+			this.log[this.log.length - 1] != "down" &&
+			this.log[this.log.length - 1] != "up")
+		{
+			this.log[this.log.length] = "down";
+		}
+		this.direction = this.log[0];
+		if (this.log.length > 2) 
+		// Holding down two keys won't clog up the array
+		{
+			this.log = [this.log[0], this.log[1]];
+		}
+		if (area.nextMove >= snake.velocity) 
+		{
+			if (this.log.length > 1)
+			{
+				this.log.shift();
+			}
+			this.direction = this.log[0];
+		}
+	}
+	this.speed = function() {
+		switch (this.velocity) {
+			case config.SPEED_NORMAL:
+				this.velocity = config.SPEED_HARD;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_HARD_TEXT; // Replace with pictures
+			break;
+			case config.SPEED_HARD:
+				this.velocity = config.SPEED_EASY;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_EASY_TEXT; // Replace with pictures
+			break;
+			case config.SPEED_EASY:
+				this.velocity = config.SPEED_NORMAL;
+				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_NORMAL_TEXT; // Replace with pictures
+			break;
+			default:
+			break;
 		}
 	}
 }
