@@ -5,7 +5,7 @@ canvas {
 }
 
 #difficulty {
-
+	background-image: url("button-speed-medium.png");
 }
 
 #snakeColor {

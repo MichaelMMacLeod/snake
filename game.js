@@ -464,15 +464,15 @@ player = function(
 		switch (this.velocity) {
 			case config.SPEED_NORMAL:
 				this.velocity = config.SPEED_HARD;
-				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_HARD_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundImage = "url('button-speed-hard.png')";
 			break;
 			case config.SPEED_HARD:
 				this.velocity = config.SPEED_EASY;
-				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_EASY_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundImage = "url('button-speed-easy.png')";
 			break;
 			case config.SPEED_EASY:
 				this.velocity = config.SPEED_NORMAL;
-				document.getElementById("difficulty").innerHTML = config.DIFFICULTY_NORMAL_TEXT; // Replace with pictures
+				document.getElementById("difficulty").style.backgroundImage = "url('button-speed-medium.png')";
 			break;
 			default:
 			break;
