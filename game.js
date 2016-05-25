@@ -30,12 +30,6 @@ config =
 	SPEED_NORMAL : 5,
 	SPEED_HARD : 3,
 	SPEED_EASY : 7,
-	DIFFICULTY_EASY_TEXT : "[Difficulty] Well-Fed", // Replace with pictures
-	DIFFICULTY_NORMAL_TEXT : "[Difficulty] Hungry", // Replace with pictures
-	DIFFICULTY_HARD_TEXT : "[Difficulty] Starving", // Replace with pictures
-	DIFFICULTY_EASY_COLOR : "green", // Replace with pictures
-	DIFFICULTY_NORMAL_COLOR : "pink", // Replace with pictures
-	DIFFICULTY_HARD_COLOR : "red" // Replace with pictures
 }
 
 area = 
