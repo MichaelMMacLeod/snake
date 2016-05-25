@@ -13,11 +13,11 @@ canvas {
 }
 
 #chuckNorrisMode {
-
+	background-image: url("button-ghost-off.png");
 }
 
 #reset {
-
+	background-image: url("button-reload.png");
 }
 
 #menu {

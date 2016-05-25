@@ -366,6 +366,14 @@ player = function(
 	this.hardcore = function()
 	{
 		this.invisible = !this.invisible;
+		if (this.invisible)
+		{
+			document.getElementById("chuckNorrisMode").style.backgroundImage = "url('button-ghost-on.png')";
+		}
+		else
+		{
+			document.getElementById("chuckNorrisMode").style.backgroundImage = "url('button-ghost-off.png')";
+		}
 	}
 	this.newColor = function()
 	{
