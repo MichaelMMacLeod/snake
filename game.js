@@ -246,93 +246,93 @@ piece = function(
         switch (this.color)
         {
             case "empty":
-                ctx.fillStyle = config.PIECE_EMPTY;
+            ctx.fillStyle = config.PIECE_EMPTY;
             break;
             case "snout":
-                ctx.fillStyle = snake.snout;
+            ctx.fillStyle = snake.snout;
             break;
             case "body":
-                this.life++;
-                if (this.life > snake.length)
+            this.life++;
+            if (this.life > snake.length)
+            {
+                snake.body.shift();
+                this.life = 0;
+                this.color = "empty";
+                this.update();
+            }
+            else
+            {
+                if (!snake.invisible) 
                 {
-                    snake.body.shift();
-                    this.life = 0;
-                    this.color = "empty";
-                    this.update();
-                }
-                else
-                {
-                    if (!snake.invisible) 
+                    for (var i = 0; i < snake.body.length; i++)
                     {
-                        for (var i = 0; i < snake.body.length; i++)
+                        if (snake.body[i].column == this.column &&
+                            snake.body[i].row == this.row)
                         {
-                            if (snake.body[i].column == this.column &&
-                                snake.body[i].row == this.row)
+                            var r;
+                            var g;
+                            var b;
+                            switch (snake.color) 
                             {
-                                var r;
-                                var g;
-                                var b;
-                                switch (snake.color) 
-                                {
 
-                                    case "blue":
-                                        r = 0;
-                                        g = 0;
-                                        b = 255;
-                                        r += Math.round(255 / snake.body.length * i);
-                                        g += Math.round(255 / snake.body.length * i);
-                                        ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-                                    break;
-                                    case "green":
-                                        r = 0;
-                                        g = 255;
-                                        b = 0;
-                                        r += Math.round(255 / snake.body.length * i);
-                                        b += Math.round(255 / snake.body.length * i);
-                                        ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-                                    break;
-                                    case "purple":
-                                        r = 255;
-                                        g = 0;
-                                        b = 255;
-                                        g += Math.round(255 / snake.body.length * i);
-                                        ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-                                    break;
-                                    default:
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (snake.body[0].column == this.column &&
-                            snake.body[0].row == this.row)
-                        {
-                            switch (snake.color)
-                            {
                                 case "blue":
-                                    ctx.fillStyle = "rgb(0, 0, 255)";
+                                r = 0;
+                                g = 0;
+                                b = 255;
+                                r += Math.round(255 / snake.body.length * i);
+                                g += Math.round(255 / snake.body.length * i);
+                                ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
                                 break;
                                 case "green":
-                                    ctx.fillStyle = "rgb(0, 255, 0)";
+                                r = 0;
+                                g = 255;
+                                b = 0;
+                                r += Math.round(255 / snake.body.length * i);
+                                b += Math.round(255 / snake.body.length * i);
+                                ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
                                 break;
                                 case "purple":
-                                    ctx.fillStyle = "rgb(255, 0, 255)";
+                                r = 255;
+                                g = 0;
+                                b = 255;
+                                g += Math.round(255 / snake.body.length * i);
+                                ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
                                 break;
                                 default:
                                 break;
                             }
                         }
-                        else
-                        {
-                            ctx.fillStyle = config.PIECE_EMPTY;
-                        }
                     }
                 }
+                else
+                {
+                    if (snake.body[0].column == this.column &&
+                        snake.body[0].row == this.row)
+                    {
+                        switch (snake.color)
+                        {
+                            case "blue":
+                            ctx.fillStyle = "rgb(0, 0, 255)";
+                            break;
+                            case "green":
+                            ctx.fillStyle = "rgb(0, 255, 0)";
+                            break;
+                            case "purple":
+                            ctx.fillStyle = "rgb(255, 0, 255)";
+                            break;
+                            default:
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        ctx.fillStyle = config.PIECE_EMPTY;
+                    }
+                }
+            }
             break;
             case "candy":
-                ctx.fillStyle = config.PIECE_CANDY;
+            ctx.fillStyle = config.PIECE_CANDY;
             break;
             default:
             break;
@@ -384,16 +384,16 @@ player = function(
     {
         switch (this.color) {
             case "blue":
-                this.color = "green";
-                document.getElementById("snakeColor").style.backgroundImage = "url('button-color-green.png')";
+            this.color = "green";
+            document.getElementById("snakeColor").style.backgroundImage = "url('button-color-green.png')";
             break;
             case "green":
-                this.color = "purple";
-                document.getElementById("snakeColor").style.backgroundImage = "url('button-color-pink.png')";
+            this.color = "purple";
+            document.getElementById("snakeColor").style.backgroundImage = "url('button-color-pink.png')";
             break;
             case "purple":      
-                this.color = "blue";
-                document.getElementById("snakeColor").style.backgroundImage = "url('button-color-blue.png')";
+            this.color = "blue";
+            document.getElementById("snakeColor").style.backgroundImage = "url('button-color-blue.png')";
             break;
             default:
             break;
@@ -461,34 +461,34 @@ player = function(
         this.direction = this.log[0];
         if (this.log.length > 2) 
         // Holding down two keys won't clog up the array
+    {
+        this.log = [this.log[0], this.log[1]];
+    }
+    if (area.nextMove >= snake.velocity) 
+    {
+        if (this.log.length > 1)
         {
-            this.log = [this.log[0], this.log[1]];
+            this.log.shift();
         }
-        if (area.nextMove >= snake.velocity) 
-        {
-            if (this.log.length > 1)
-            {
-                this.log.shift();
-            }
-            this.direction = this.log[0];
-        }
-    };
-    this.speed = function() {
-        switch (this.velocity) {
-            case config.SPEED_NORMAL:
-                this.velocity = config.SPEED_HARD;
-                document.getElementById("difficulty").style.backgroundImage = "url('button-speed-hard.png')";
-            break;
-            case config.SPEED_HARD:
-                this.velocity = config.SPEED_EASY;
-                document.getElementById("difficulty").style.backgroundImage = "url('button-speed-easy.png')";
-            break;
-            case config.SPEED_EASY:
-                this.velocity = config.SPEED_NORMAL;
-                document.getElementById("difficulty").style.backgroundImage = "url('button-speed-medium.png')";
-            break;
-            default:
-            break;
-        }
-    };
+        this.direction = this.log[0];
+    }
+};
+this.speed = function() {
+    switch (this.velocity) {
+        case config.SPEED_NORMAL:
+        this.velocity = config.SPEED_HARD;
+        document.getElementById("difficulty").style.backgroundImage = "url('button-speed-hard.png')";
+        break;
+        case config.SPEED_HARD:
+        this.velocity = config.SPEED_EASY;
+        document.getElementById("difficulty").style.backgroundImage = "url('button-speed-easy.png')";
+        break;
+        case config.SPEED_EASY:
+        this.velocity = config.SPEED_NORMAL;
+        document.getElementById("difficulty").style.backgroundImage = "url('button-speed-medium.png')";
+        break;
+        default:
+        break;
+    }
+};
 };
